@@ -1,0 +1,2039 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Estudo de Dosagem - TIUPI Comparativos</title>
+  <style>
+    :root{
+      --bg:#f5f5f5;
+      --panel:#ffffff;
+      --border:#2f2f2f;
+      --grid:#d0d0d0;
+      --text:#111;
+      --muted:#444;
+      --accent:#000;
+      --warn:#d97b00;
+      --danger:#b00020;
+      --success:#0b874b;
+      --focus:#0a6ed1;
+      --shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 60%);
+      color: var(--text);
+      line-height: 1.35;
+    }
+    header{ max-width: 1220px; margin: 0 auto; padding: 18px 14px 8px; }
+    header h1{ margin:0 0 4px; font-size:19px; font-weight:700; color: var(--accent); }
+    header p{ margin:0; color:var(--muted); font-size:12px; }
+    main{ max-width: 1220px; margin: 0 auto; padding: 10px 14px 24px; display: grid; gap: 12px; }
+
+    .toolbar{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      background: var(--panel); border: 1px solid #ccc;
+      border-radius: 6px; padding: 10px 12px; box-shadow: var(--shadow);
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding: 6px 10px; border:1px solid #ccc; border-radius: 999px;
+      background: #f0f3f6; color: var(--muted); font-size: 11px;
+    }
+    .pill strong{ color: var(--text); font-weight: 700; }
+
+    .tabs{ display:flex; gap:6px; flex-wrap:wrap; }
+    .tab-btn{
+      border: 1px solid #ccc; background: #f8f8f8; color: var(--text);
+      padding: 8px 12px; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 12px;
+    }
+    .tab-btn[aria-selected="true"]{
+      border-color: #000;
+      background: #e8e8e8;
+      color: #000;
+    }
+
+    .card{
+      background: var(--panel); border: 1px solid #cfcfcf;
+      border-radius: 6px; padding: 12px; box-shadow: var(--shadow);
+    }
+    .card h2{ margin:0 0 10px; font-size:14px; font-weight:800; color: #000; text-transform: uppercase; letter-spacing: 0.2px; }
+    .card h3{ margin:0 0 8px; font-size:13px; font-weight:800; color: #000; }
+    .hint{ margin: 8px 0 0; font-size: 11px; color: var(--muted); }
+
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-1{ grid-template-columns: 1fr; }
+    .grid-3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } .grid-3{ grid-template-columns: 1fr; } }
+
+    label{ display:block; font-size: 11px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.2px; }
+    input, select, textarea{
+      width: 100%; padding: 8px 9px; border-radius: 4px;
+      border: 1px solid #9e9e9e; background: #fff;
+      color: var(--text); outline: none; font-size: 13px;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color: var(--focus);
+      box-shadow: 0 0 0 2px rgba(10,110,209,0.18);
+    }
+    .row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top: 10px; }
+    button{
+      appearance:none; border: 1px solid transparent; border-radius: 4px;
+      padding: 9px 11px; font-weight: 800; cursor: pointer;
+      background: #000; color: white; font-size:12px;
+    }
+    button.secondary{ background: #f8f8f8; border-color: #b0b0b0; color: var(--text); }
+    button.success{ background: var(--success); }
+    button.danger{ background: var(--danger); }
+    button.warn{ background: var(--warn); color: #2b1a00; }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+
+    table{
+      width: 100%; border-collapse: collapse; margin-top: 8px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+    }
+    th, td{
+      text-align:left; padding: 7px 8px; border: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    th{ background: #f2f2f2; color: #000; font-weight: 800; }
+    tr:hover td{ background: #f7f9fb; }
+    .empty{ color: var(--muted); font-size: 12px; padding-top: 8px; }
+
+    .split{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 1000px){ .split{ grid-template-columns: 1fr; } }
+
+    .status{ margin-left:auto; color: var(--muted); font-size: 11px; }
+    .status strong{ color: var(--text); }
+    .nowrap{ white-space: nowrap; }
+    .right{ text-align:right; }
+    .center{ text-align:center; }
+    .bold{ font-weight:700; }
+
+    .tab-panel[hidden]{ display:none; }
+    .divider{ height:1px; background: #bdbdbd; margin: 12px 0; }
+
+    .info{
+      border: 1px solid #cfcfcf; background: #fafafa;
+      padding: 8px 10px; border-radius: 4px;
+      color: var(--muted); font-size: 11px; line-height: 1.35; margin-top: 8px;
+    }
+
+    /* Modal */
+    .modal-backdrop{
+      position:fixed; inset:0; background: rgba(0,0,0,.35);
+      display:none; align-items:center; justify-content:center;
+      padding: 18px; z-index: 50;
+    }
+    .modal{
+      width: min(1100px, 100%); background: #ffffff;
+      border: 1px solid #bdbdbd; border-radius: 6px;
+      padding: 12px; box-shadow: 0 18px 40px rgba(0,0,0,.25);
+      max-height: 88vh; overflow:auto;
+    }
+    .modal-header{ display:flex; gap:8px; align-items:flex-start; justify-content:space-between; margin-bottom: 10px; }
+    .modal-title{ margin:0; font-size: 14px; font-weight:800; color: #000; text-transform: uppercase; }
+    .modal-sub{ margin:3px 0 0; color: var(--muted); font-size: 11px; }
+    .modal-close{ padding: 7px 9px; }
+
+    .gran-input{ width: 120px; text-align:right; }
+
+    /* Impressão estilo TIUPI */
+    .print-sheet{
+      display: grid; gap: 10px;
+      border: 1px solid #000;
+      padding: 10px;
+      background: #fff;
+    }
+    .print-header{
+      display:grid; grid-template-columns: 1fr 1fr; align-items:center;
+      text-align:center; gap: 6px;
+    }
+    .print-title-top{ font-size:12px; font-weight:800; text-transform: uppercase; }
+    .print-title-main{ font-size:22px; font-weight:900; }
+    .print-title-sub{ font-size:13px; font-weight:700; text-transform: uppercase; margin-top:2px; }
+
+    .box-outline{
+      border: 1px solid #000; padding: 6px 8px; border-radius: 2px; background:#fff;
+    }
+    .box-outline input{
+      border: 1px solid #000; border-radius: 0; height: 26px; font-weight:700; text-align:center;
+    }
+
+    .table-thin th, .table-thin td{ border:1px solid #000; }
+    .table-compact th, .table-compact td{ padding: 6px 6px; font-size:12px; }
+    .table-tight th, .table-tight td{ padding: 5px 5px; font-size:11.5px; }
+
+    .section-title{
+      font-weight:900; text-transform: uppercase; margin: 6px 0 4px;
+    }
+
+    .editing-cell{
+      background: #fffbe6;
+      outline: 1px dashed #dcb200;
+    }
+
+    @media print{
+      @page { size: A4 portrait; margin: 6mm; }
+      html, body { width: 210mm; height: 297mm; }
+      body{ background: #ffffff; }
+      header, .toolbar, .no-print{ display:none !important; }
+      main{ max-width: 100%; padding: 0; }
+      .card, .print-box, .print-sheet, table, tr, td, th{ page-break-inside: avoid; }
+      .card.print-sheet{ page-break-after: avoid; }
+      input, select, textarea{ border:1px solid #000; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Estudo de Dosagem</h1>
+  <p>Abas: Clientes, Insumos, Características e Traço/Impressão. Dados salvos no navegador (localStorage). M.E em <strong>g/cm³</strong>.</p>
+</header>
+
+<main>
+  <section class="toolbar" aria-label="Barra superior">
+    <div class="tabs" role="tablist" aria-label="Abas">
+      <button class="tab-btn" role="tab" id="tabClientes" aria-controls="panelClientes" aria-selected="true" type="button">Clientes</button>
+      <button class="tab-btn" role="tab" id="tabInsumos" aria-controls="panelInsumos" aria-selected="false" type="button">Insumos</button>
+      <button class="tab-btn" role="tab" id="tabCaracteristicas" aria-controls="panelCaracteristicas" aria-selected="false" type="button">Características</button>
+      <button class="tab-btn" role="tab" id="tabTraco" aria-controls="panelTraco" aria-selected="false" type="button">Traço / Impressão</button>
+    </div>
+    <div class="pill">Cliente: <strong id="uiClienteSel">Nenhum</strong></div>
+    <div class="pill">Insumo: <strong id="uiInsumoSel">Nenhum</strong></div>
+  </section>
+
+  <!-- Clientes -->
+  <section id="panelClientes" class="tab-panel" role="tabpanel" aria-labelledby="tabClientes">
+    <div class="split">
+      <div class="card">
+        <h2>Cadastro do cliente</h2>
+        <form id="clienteForm">
+          <div class="grid">
+            <div><label for="empresa">Nome da empresa *</label><input id="empresa" required /></div>
+            <div>
+              <label for="segmento">Segmento *</label>
+              <select id="segmento" required>
+                <option value="" selected disabled>Selecione...</option>
+                <option value="usina">usina</option>
+                <option value="pre-fabricados">pre-fabricados</option>
+                <option value="artefatos">artefatos</option>
+                <option value="obra">obra</option>
+                <option value="outros">outros</option>
+              </select>
+            </div>
+            <div class="grid-1" style="grid-column: 1 / -1;"><label for="endereco">Endereço *</label><input id="endereco" required /></div>
+            <div><label for="telefone">Contato telefônico *</label><input id="telefone" type="tel" required /></div>
+            <div><label for="email">E-mail *</label><input id="email" type="email" required /></div>
+          </div>
+          <div class="row">
+            <button type="submit" class="success">Salvar cliente</button>
+            <button type="button" class="secondary" id="limparClienteBtn">Limpar</button>
+            <button type="button" class="secondary" id="irParaInsumosBtn" disabled>Ir para Insumos</button>
+          </div>
+          <p class="hint">Ao salvar, o cliente fica selecionado automaticamente.</p>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Clientes cadastrados</h2>
+        <div class="row" style="margin-top:0;">
+          <button type="button" class="secondary" id="desselecionarClienteBtn">Desselecionar</button>
+          <button type="button" class="danger" id="removerClienteBtn" disabled>Remover selecionado</button>
+          <button type="button" class="danger" id="limparTudoBtn">Apagar tudo</button>
+        </div>
+        <table aria-label="Tabela de clientes">
+          <thead><tr><th>Empresa</th><th>Segmento</th><th>Contato</th></tr></thead>
+          <tbody id="clientesTbody"></tbody>
+        </table>
+        <div class="empty" id="clientesEmpty" hidden>Nenhum cliente cadastrado.</div>
+        <p class="hint">Clique numa linha para selecionar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Insumos -->
+  <section id="panelInsumos" class="tab-panel" role="tabpanel" aria-labelledby="tabInsumos" hidden>
+    <div class="split">
+      <div class="card">
+        <h2>Cadastro de insumo (por cliente)</h2>
+        <p class="hint" style="margin-top:0;">Cliente selecionado: <strong id="insumosClienteNome">Nenhum</strong></p>
+        <form id="insumoForm">
+          <div class="grid">
+            <div><label for="insumo">Insumo *</label><input id="insumo" required /></div>
+            <div><label for="tipo">Tipo *</label><input id="tipo" required /></div>
+            <div class="grid-1" style="grid-column: 1 / -1;"><label for="fornecedor">Fornecedor *</label><input id="fornecedor" required /></div>
+          </div>
+          <div class="row">
+            <button type="submit" class="success" id="salvarInsumoBtn" disabled>Salvar insumo</button>
+            <button type="button" class="secondary" id="limparInsumoBtn" disabled>Limpar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Insumos do cliente</h2>
+        <div class="row" style="margin-top:0;">
+          <button type="button" class="secondary" id="irParaCaracteristicasBtn" disabled>Ir para Características</button>
+        </div>
+        <table aria-label="Tabela de insumos">
+          <thead>
+            <tr>
+              <th>Insumo / Tipo / Fornecedor</th>
+              <th class="nowrap">M.E (g/cm³)</th>
+              <th class="nowrap">MF</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="insumosTbody"></tbody>
+        </table>
+        <div class="empty" id="insumosEmpty" hidden>Nenhum insumo cadastrado para este cliente.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Características -->
+  <section id="panelCaracteristicas" class="tab-panel" role="tabpanel" aria-labelledby="tabCaracteristicas" hidden>
+    <div class="card">
+      <h2>Características (insumo selecionado)</h2>
+      <div class="row" style="margin-top:0;">
+        <div class="pill">Cliente: <strong id="carClienteNome">Nenhum</strong></div>
+        <div class="pill">Insumo: <strong id="carInsumoNome">Nenhum</strong></div>
+        <button type="button" class="warn" id="abrirModalCarBtn" disabled>Abrir editor</button>
+      </div>
+      <div class="info">Confirmar entrada de massa retida: Enter ou ao sair do campo.</div>
+    </div>
+  </section>
+
+  <!-- Traço + Impressão unificados -->
+  <section id="panelTraco" class="tab-panel" role="tabpanel" aria-labelledby="tabTraco" hidden>
+    <div class="card">
+      <h2>Traço - Montagem e cálculo</h2>
+
+      <div class="grid">
+        <div>
+          <label for="trCliente">Cliente</label>
+          <select id="trCliente"></select>
+          <p class="hint">Atualiza conforme clientes cadastrados.</p>
+        </div>
+        <div>
+          <label for="trVolume">Volume desejado (m³)</label>
+          <input id="trVolume" type="number" step="0.01" min="0" value="1" />
+        </div>
+        <div>
+          <label for="trTitulo">Título do estudo</label>
+          <input id="trTitulo" placeholder="Ex: Comparativo CP II x CP V" />
+        </div>
+        <div>
+          <label for="trData">Data do estudo</label>
+          <input id="trData" type="date" />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <h2 style="margin-top:0;">Entradas</h2>
+      <div class="grid-3">
+        <div><label for="inArgamassa">Argamassa (%)</label><input id="inArgamassa" type="number" step="0.1" min="0" max="100" value="53.7" /></div>
+        <div><label for="inAC">Relação A/C</label><input id="inAC" type="number" step="0.01" min="0" value="0.50" /></div>
+        <div><label for="inAr">Ar incorporado (%)</label><input id="inAr" type="number" step="0.1" min="0" max="30" value="2.0" /></div>
+        <div><label for="inH">Água na mistura H (%)</label><input id="inH" type="number" step="0.1" min="0" max="40" value="9.7" /></div>
+        <div><label for="inAdicaoPct">Adição (%) (sobre cimento)</label><input id="inAdicaoPct" type="number" step="0.01" min="0" value="0.0" /></div>
+        <div><label for="inAditivo1Pct">Aditivo 1 (%)</label><input id="inAditivo1Pct" type="number" step="0.01" min="0" value="0.5" /></div>
+        <div><label for="inAditivo2Pct">Aditivo 2 (%)</label><input id="inAditivo2Pct" type="number" step="0.01" min="0" value="0.5" /></div>
+      </div>
+      <div class="divider"></div>
+      <h2 style="margin-top:0;">Materiais (insumos do cliente)</h2>
+      <div class="grid-3">
+        <div><label for="matCimento">Cimento</label><select id="matCimento"></select></div>
+        <div><label for="matAdicao">Adição</label><select id="matAdicao"></select></div>
+        <div><label for="matAgua">Água</label><select id="matAgua"></select></div>
+        <div><label for="matAreia1">Areia 1</label><select id="matAreia1"></select></div>
+        <div><label for="matAreia2">Areia 2</label><select id="matAreia2"></select></div>
+        <div><label for="matAreia3">Areia 3</label><select id="matAreia3"></select></div>
+        <div><label for="matBrita0">Brita 0</label><select id="matBrita0"></select></div>
+        <div><label for="matBrita12">Brita 1/2</label><select id="matBrita12"></select></div>
+        <div><label for="matBrita1">Brita 1</label><select id="matBrita1"></select></div>
+        <div><label for="matAditivo1">Aditivo 1</label><select id="matAditivo1"></select></div>
+        <div><label for="matAditivo2">Aditivo 2</label><select id="matAditivo2"></select></div>
+      </div>
+      <div class="divider"></div>
+      <h2 style="margin-top:0;">Proporções (%)</h2>
+      <div class="grid">
+        <div class="card" style="box-shadow:none; border:1px dashed #bdbdbd;">
+          <h2>Areias (soma = 100%)</h2>
+          <div class="grid">
+            <div><label for="pctAreia1">% Areia 1</label><input id="pctAreia1" type="number" step="0.1" min="0" value="40" /></div>
+            <div><label for="pctAreia2">% Areia 2</label><input id="pctAreia2" type="number" step="0.1" min="0" value="30" /></div>
+            <div><label for="pctAreia3">% Areia 3</label><input id="pctAreia3" type="number" step="0.1" min="0" value="30" /></div>
+          </div>
+          <p class="hint" id="areiasSumHint">Soma: —</p>
+        </div>
+        <div class="card" style="box-shadow:none; border:1px dashed #bdbdbd;">
+          <h2>Britas (soma = 100%)</h2>
+          <div class="grid">
+            <div><label for="pctBrita0">% Brita 0</label><input id="pctBrita0" type="number" step="0.1" min="0" value="30" /></div>
+            <div><label for="pctBrita12">% Brita 1/2</label><input id="pctBrita12" type="number" step="0.1" min="0" value="40" /></div>
+            <div><label for="pctBrita1">% Brita 1</label><input id="pctBrita1" type="number" step="0.1" min="0" value="30" /></div>
+          </div>
+          <p class="hint" id="britasSumHint">Soma: —</p>
+        </div>
+      </div>
+      <div class="row">
+        <button type="button" class="success" id="calcTracoBtn">Calcular traço</button>
+        <button type="button" class="warn" id="salvarTracoBtn">Salvar / Inserir traço</button>
+        <span class="status">Resultado: <strong id="tracoStatus">—</strong></span>
+      </div>
+      <div class="divider"></div>
+      <h2 style="margin-top:0;">Resultados</h2>
+      <div class="grid-3">
+        <div><label>m</label><input id="outM" disabled /></div>
+        <div><label>a</label><input id="outA" disabled /></div>
+        <div><label>b</label><input id="outB" disabled /></div>
+        <div><label>Cc (kg/m³)</label><input id="outCc" disabled /></div>
+      </div>
+      <div class="info">
+        m = (A/C ÷ H) − (1 + Adição) &nbsp; • a = Argamassa × ((1 + Adição) + m) − (1 + Adição) &nbsp; • b = m − a &nbsp; • Cc = (1000 × (1 − Ar)) ÷ Σ(Di/Bi)
+      </div>
+      <table aria-label="Tabela de traço">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th class="nowrap">M.E</th>
+            <th class="nowrap">MF</th>
+            <th class="right nowrap">Traço unitário</th>
+            <th class="right nowrap">Traço 1 m³ (kg)</th>
+            <th class="right nowrap">Traço p/ Volume (kg)</th>
+          </tr>
+        </thead>
+        <tbody id="tracoTbody"></tbody>
+      </table>
+      <div class="empty" id="tracoEmpty">Clique em “Calcular traço” para gerar a tabela.</div>
+
+      <div class="divider"></div>
+      <h2 style="margin-top:0;">Traços salvos</h2>
+      <table aria-label="Tabela de traços salvos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Título do estudo</th>
+            <th>Data</th>
+            <th>Insumos</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tracosSalvosTbody"></tbody>
+      </table>
+      <div class="empty" id="tracosSalvosEmpty">Nenhum traço salvo.</div>
+    </div>
+
+    <!-- Impressão (agora dentro da aba de Traço) -->
+    <div class="card print-sheet" style="margin-top:14px;">
+      <div class="print-header">
+        <div>
+          <div class="print-title-top">ABNT NBR 12821 - Preparação de concreto em laboratório</div>
+          <div class="print-title-main">
+            <input id="printTitulo" data-print-key="tituloLivre" placeholder="Título do relatório" style="width:100%; border:1px solid #000; font-size:18px; font-weight:800; text-align:center; padding:4px;" />
+          </div>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="row no-print" style="margin-top:6px; justify-content:flex-start;">
+        <button type="button" class="secondary" id="printSyncBtn">Atualizar do Traço</button>
+        <button type="button" class="success" id="printPdfBtn">Gerar PDF</button>
+        <button type="button" class="warn" id="saveTraceBtn">Salvar traço (histórico)</button>
+      </div>
+
+      <div class="print-grid-3" style="margin-top:6px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div class="center">
+          <div class="bold" style="font-size:13px;">PEDIDO Nº</div>
+          <div class="box-outline"><input id="printPedido" data-print-key="pedido" placeholder="-" /></div>
+        </div>
+        <div class="center">
+          <div class="bold" style="font-size:13px;">DATA</div>
+          <div class="box-outline"><input id="printData" data-print-key="data" type="date" /></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="split">
+        <div>
+          <div class="box-outline" style="margin-bottom:8px;">
+            <div class="section-title">Características da dosagem:</div>
+            <table class="table-compact table-thin">
+              <tbody>
+                <tr><td>Fck (MPa)</td><td class="right"><input data-print-key="fck" placeholder="-" /></td></tr>
+                <tr><td>Abatimento (mm)</td><td class="right"><input data-print-key="abatimento" placeholder="S100" /></td></tr>
+                <tr><td>Britas</td><td class="right"><input data-print-key="britas" placeholder="B-1" /></td></tr>
+                <tr><td>Volume (l)</td><td class="right"><input data-print-key="volumeL" placeholder="15" /></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="box-outline">
+            <div class="section-title">Características do concreto fresco:</div>
+            <table class="table-compact table-thin">
+              <tbody>
+                <tr><td>Hora Início</td><td class="right"><input data-print-key="horaInicio" placeholder="16:35:00" /></td></tr>
+                <tr><td>Temperatura ambiente (ºC)</td><td class="right"><input data-print-key="tempAmb" placeholder="32" /></td></tr>
+                <tr><td>Umidade ambiente (%)</td><td class="right"><input data-print-key="umidAmb" placeholder="67" /></td></tr>
+                <tr><td>Temperatura do concreto (ºC)</td><td class="right"><input data-print-key="tempConc" placeholder="31,5" /></td></tr>
+                <tr><td>Ar Incorporado (%)</td><td class="right"><input id="printArInc" disabled /></td></tr>
+                <tr><td>M.E (g/cm³)</td><td class="right"><input data-print-key="meConc" placeholder="2491,000" /></td></tr>
+                <tr><td>M.Total (Kg)</td><td class="right"><input data-print-key="mTotal" placeholder="-" /></td></tr>
+                <tr><td>NBR NM 67 ST e NBR 15823-2 SF</td><td class="right"><input data-print-key="slump" placeholder="165" /></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="box-outline">
+          <div class="section-title center">Informação dos Materiais:</div>
+          <table class="table-compact table-thin" id="printMateriaisInfo">
+            <thead>
+              <tr>
+                <th>Material</th>
+                <th>Descrição</th>
+                <th class="right nowrap">Teor</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="box-outline">
+        <table class="table-tight table-thin" id="printDosagemTable">
+          <thead>
+            <tr>
+              <th rowspan="2">Material</th>
+              <th rowspan="2" class="center">Materiais secos<br>Dosagem 1m³ (kg)</th>
+              <th rowspan="2" class="center">Proporção<br>(%)</th>
+              <th rowspan="2" class="center">Umidade</th>
+              <th rowspan="2" class="center">Traço corrigido<br>1 m³</th>
+            </tr>
+          </thead>
+          <tbody id="printDosagemTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="grid-3">
+        <div class="box-outline center">
+          <div class="bold">a/c</div>
+          <input id="printAC" disabled />
+          <div style="margin-top:6px;">a/c real</div>
+          <input id="printACReal" disabled />
+        </div>
+        <div class="box-outline center">
+          <div class="bold">a/agl</div>
+          <input id="printAagl" disabled />
+        </div>
+        <div class="box-outline center">
+          <div class="bold">K</div>
+          <input id="printK" disabled />
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top:8px;">
+        <div></div>
+        <div class="box-outline center">
+          <div class="bold">H</div>
+          <input id="printH" disabled />
+          <div style="margin-top:6px;">(H) Real</div>
+          <input id="printHReal" disabled />
+        </div>
+        <div></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="split">
+        <div class="box-outline" style="max-width:360px;">
+          <table class="table-compact table-thin">
+            <tbody>
+              <tr><td>Água Adicionada</td><td class="right"><input data-print-key="aguaAdicionada" /></td></tr>
+              <tr><td>Água Retida</td><td class="right"><input data-print-key="aguaRetida" /></td></tr>
+              <tr><td>Água Inicial P/ m³</td><td class="right"><input id="printAguaInicial" disabled /></td></tr>
+              <tr><td>Slump Após 15 min</td><td class="right"><input data-print-key="slump15" /></td></tr>
+              <tr><td>Água P/correção</td><td class="right"><input data-print-key="aguaCorrecao" /></td></tr>
+              <tr><td>Slump Corrigido</td><td class="right"><input data-print-key="slumpCorrigido" /></td></tr>
+              <tr><td>Água Final m³</td><td class="right"><input id="printAguaFinal" disabled /></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="box-outline" style="border:none; background:#fff;">
+          <div class="section-title">Observações</div>
+          <textarea data-print-key="observacoes" rows="7" style="width:100%; border:1px solid #000; border-radius:0;"></textarea>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="box-outline">
+        <table class="table-tight table-thin">
+          <thead>
+            <tr>
+              <th>Idades</th>
+              <th>Data Ruptura</th>
+              <th class="right">NBR 5739 - Compressão (MPa)</th>
+              <th class="right">AASHTO T-358-17</th>
+              <th class="right">NBR 12142 - Tração na flexão (MPa)</th>
+              <th class="right">Evolução (%)</th>
+            </tr>
+          </thead>
+          <tbody id="printResistenciaTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="grid-3">
+        <div class="box-outline"><label>Pesagem</label><input data-print-key="pesagem" /></div>
+        <div class="box-outline"><label>Conferência</label><input data-print-key="conferencia" /></div>
+        <div class="box-outline"><label>Moldagem</label><input data-print-key="moldagem" /></div>
+      </div>
+
+      <div class="row no-print" style="margin-top:10px; justify-content:flex-start;">
+        <button type="button" class="success" id="salvarEnsaioBtn">Inserir / Salvar dados de ensaio</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card" style="border:1px dashed #bdbdbd; box-shadow:none;">
+        <h2>Histórico de traços salvos (local, editável)</h2>
+        <div class="info no-print">Armazenado em localStorage. Células editáveis; ao sair do foco, salvam.</div>
+
+        <h3>1) Insumos (horizontal)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nº traço</th><th>Cliente</th>
+              <th>Cimento</th><th>Adição</th>
+              <th>Areia 1</th><th>Areia 2</th><th>Areia 3</th>
+              <th>Brita 0</th><th>Brita 1/2</th><th>Brita 1</th>
+              <th>Água</th><th>Aditivo 1</th><th>Aditivo 2</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="histInsumosTbody"></tbody>
+        </table>
+
+        <h3>2) Quantidades (horizontal)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nº traço</th><th>Cliente</th>
+              <th>Cimento</th><th>Adição</th>
+              <th>Areia 1</th><th>Areia 2</th><th>Areia 3</th>
+              <th>Brita 0</th><th>Brita 1/2</th><th>Brita 1</th>
+              <th>Água</th><th>Aditivo 1</th><th>Aditivo 2</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="histQuantTbody"></tbody>
+        </table>
+
+        <h3>3) Resultados obtidos (horizontal)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nº traço</th><th>Cliente</th>
+              <th>1 dia</th><th>3 dias</th><th>7 dias</th><th>14 dias</th>
+              <th>28 dias</th><th>56 dias</th><th>63 dias</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="histResultadosTbody"></tbody>
+        </table>
+
+        <h3>4) Formulário (snapshot, horizontal)</h3>
+        <table>
+          <thead><tr>
+            <th>Nº traço</th><th>Cliente</th><th>Data</th><th>Slump</th><th>Slump 15</th><th>Slump corr.</th>
+            <th>Água add.</th><th>Água retida</th><th>Temp conc.</th><th>Temp amb.</th><th>Umid. amb.</th><th>Volume (m³)</th><th>Volume lab (m³)</th>
+            <th>Ações</th>
+          </tr></thead>
+          <tbody id="histFormTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="carModalBackdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">Editor de características físicas</h3>
+        <p class="modal-sub" id="carModalSub">—</p>
+      </div>
+      <button class="secondary modal-close" type="button" id="carModalCloseBtn">Fechar</button>
+    </div>
+    <div class="grid-3">
+      <div><label for="massaEspecifica">Massa específica (g/cm³) *</label><input id="massaEspecifica" type="number" step="0.001" min="0" /></div>
+      <div><label>Total massa retida (g)</label><input id="totalMassaRetida" disabled /></div>
+      <div><label>Módulo de finura (MF)</label><input id="mfCalculado" disabled /></div>
+    </div>
+    <div class="info">Peneiras: 25 / 19 / 12,5 / 9,5 / 6,3 / 4,8 / 2,4 / 1,2 / 0,6 / 0,3 / 0,15 / FUNDO — Enter ou blur para confirmar.</div>
+    <table aria-label="Tabela de granulometria">
+      <thead><tr><th>Peneira (mm)</th><th class="right">Massa retida (g)</th><th class="right">% Retido</th><th class="right">% Retido acum.</th><th class="right">% Passante</th></tr></thead>
+      <tbody id="granTbody"></tbody>
+      <tfoot><tr><th>FUNDO</th><th class="right"><span id="fundoMassa">—</span></th><th class="right"><span id="fundoPerc">—</span></th><th class="right"><span id="fundoAcum">—</span></th><th class="right"><span id="fundoPass">—</span></th></tr></tfoot>
+    </table>
+    <div class="row">
+      <button type="button" class="success" id="salvarCaracteristicasBtn">Salvar características</button>
+      <button type="button" class="secondary" id="resetGranBtn">Zerar massas</button>
+      <span class="status">Editando: <strong id="carEditStatus">—</strong></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = "estudo_dosagem_tabs_clean_final_v2";
+  const RUPTURA_DIAS = [1,3,7,14,28,56,63];
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {
+        clientes:[], selectedClienteId:null, selectedInsumoId:null, activeTab:"clientes",
+        printForm:{}, printRows:{}, lastTraco:null, tracosHistorico:[],
+        tracosSalvos:[], ensaiosSalvos:[], selectedTracoId:null
+      };
+      const parsed = JSON.parse(raw);
+      return {
+        clientes: Array.isArray(parsed.clientes) ? parsed.clientes : [],
+        selectedClienteId: parsed.selectedClienteId ?? null,
+        selectedInsumoId: parsed.selectedInsumoId ?? null,
+        activeTab: parsed.activeTab || "clientes",
+        printForm: parsed.printForm || {},
+        printRows: parsed.printRows || {},
+        lastTraco: parsed.lastTraco || null,
+        tracosHistorico: Array.isArray(parsed.tracosHistorico) ? parsed.tracosHistorico : [],
+        tracosSalvos: Array.isArray(parsed.tracosSalvos) ? parsed.tracosSalvos : [],
+        ensaiosSalvos: Array.isArray(parsed.ensaiosSalvos) ? parsed.ensaiosSalvos : [],
+        selectedTracoId: parsed.selectedTracoId ?? null
+      };
+    } catch {
+      return {
+        clientes:[], selectedClienteId:null, selectedInsumoId:null, activeTab:"clientes",
+        printForm:{}, printRows:{}, lastTraco:null, tracosHistorico:[],
+        tracosSalvos:[], ensaiosSalvos:[], selectedTracoId:null
+      };
+    }
+  }
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  let state = loadState();
+  const $ = (s) => document.querySelector(s);
+  const uid = () => (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()));
+
+  function escapeHtml(str){ return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+  function numOr0(v){ const n=Number(String(v ?? "").replace(",", ".")); return Number.isFinite(n) ? n : 0; }
+  function round(n,d=2){ if(!Number.isFinite(n)) return 0; const k=Math.pow(10,d); return Math.round(n*k)/k; }
+  function fmtPt(n,d=2){ if(!Number.isFinite(n)) return "0"; return round(n,d).toLocaleString("pt-BR",{minimumFractionDigits:d, maximumFractionDigits:d}); }
+  function addDays(baseDateStr, days){ if(!baseDateStr) return ""; const d=new Date(`${baseDateStr}T00:00:00`); d.setDate(d.getDate()+days); return d.toISOString().slice(0,10); }
+  function parsePercentInput(value){ const cleaned=String(value ?? "").replace("%","").trim(); return numOr0(cleaned); }
+  function formatPercentDisplay(value){ if (value===null||value===undefined||String(value).trim()==="") return ""; return `${fmtPt(numOr0(value), 2)}%`; }
+
+  const tabs=[
+    { key:"clientes", btn: $("#tabClientes"), panel: $("#panelClientes") },
+    { key:"insumos", btn: $("#tabInsumos"), panel: $("#panelInsumos") },
+    { key:"caracteristicas", btn: $("#tabCaracteristicas"), panel: $("#panelCaracteristicas") },
+    { key:"traco", btn: $("#tabTraco"), panel: $("#panelTraco") },
+  ];
+  function setActiveTab(key){
+    const valid = tabs.some(t=>t.key===key) ? key : "traco";
+    state.activeTab=valid; saveState();
+    tabs.forEach(t=>{ const on=t.key===valid; t.btn.setAttribute("aria-selected", on?"true":"false"); t.panel.hidden=!on; });
+    if(valid==="traco") { syncTracoUI(true); renderPrintPanel(); }
+  }
+  tabs.forEach(t=>t.btn.addEventListener("click",()=>setActiveTab(t.key)));
+
+  const uiClienteSel=$("#uiClienteSel");
+  const uiInsumoSel=$("#uiInsumoSel");
+
+  const clienteForm=$("#clienteForm");
+  const clientesTbody=$("#clientesTbody");
+  const clientesEmpty=$("#clientesEmpty");
+  const removerClienteBtn=$("#removerClienteBtn");
+  const irParaInsumosBtn=$("#irParaInsumosBtn");
+
+  const insumosClienteNome=$("#insumosClienteNome");
+  const insumoForm=$("#insumoForm");
+  const salvarInsumoBtn=$("#salvarInsumoBtn");
+  const limparInsumoBtn=$("#limparInsumoBtn");
+  const insumosTbody=$("#insumosTbody");
+  const insumosEmpty=$("#insumosEmpty");
+  const irParaCaracteristicasBtn=$("#irParaCaracteristicasBtn");
+
+  const carClienteNome=$("#carClienteNome");
+  const carInsumoNome=$("#carInsumoNome");
+  const abrirModalCarBtn=$("#abrirModalCarBtn");
+
+  const carModalBackdrop=$("#carModalBackdrop");
+  const carModalCloseBtn=$("#carModalCloseBtn");
+  const carModalSub=$("#carModalSub");
+  const carEditStatus=$("#carEditStatus");
+  const massaEspecificaInput=$("#massaEspecifica");
+  const totalMassaRetidaInput=$("#totalMassaRetida");
+  const mfCalculadoInput=$("#mfCalculado");
+  const granTbody=$("#granTbody");
+  const salvarCaracteristicasBtn=$("#salvarCaracteristicasBtn");
+  const resetGranBtn=$("#resetGranBtn");
+  const fundoMassaEl=$("#fundoMassa");
+  const fundoPercEl=$("#fundoPerc");
+  const fundoAcumEl=$("#fundoAcum");
+  const fundoPassEl=$("#fundoPass");
+
+  const trTitulo = document.getElementById("trTitulo");
+  const trData   = document.getElementById("trData");
+  if(!trData.value) trData.value = new Date().toISOString().slice(0,10);
+  const trVolume = document.getElementById("trVolume");
+  const salvarTracoBtn = document.getElementById("salvarTracoBtn");
+  const tracosSalvosTbody = document.getElementById("tracosSalvosTbody");
+  const tracosSalvosEmpty = document.getElementById("tracosSalvosEmpty");
+
+  const salvarEnsaioBtn = document.getElementById("salvarEnsaioBtn");
+
+  let modalGranMasses={};
+  const SIEVES_MM=[25,19,12.5,9.5,6.3,4.8,2.4,1.2,0.6,0.3,0.15];
+  const MF_SIEVES=[4.8,2.4,1.2,0.6,0.3,0.15];
+
+  function computeGranulometry(masses){
+    let total=0; for(const mm of SIEVES_MM) total+=numOr0(masses[String(mm)]); total+=numOr0(masses["fundo"]);
+    const rows=[]; let acum=0;
+    for(const mm of SIEVES_MM){
+      const m=numOr0(masses[String(mm)]);
+      const perc= total>0 ? (m/total)*100 : 0;
+      acum+=perc; const pass=Math.max(0,100-acum);
+      rows.push({mm,massa:m,perc,acum,pass});
+    }
+    const fundoM=numOr0(masses["fundo"]);
+    const fundoPerc= total>0 ? (fundoM/total)*100 : 0;
+    const fundoAcum=acum+fundoPerc;
+    const fundoPass=Math.max(0,100-fundoAcum);
+    const mapAcum=new Map(rows.map(r=>[r.mm,r.acum]));
+    let somaAcumMF=0; for(const mm of MF_SIEVES) somaAcumMF+=(mapAcum.get(mm)??0);
+    const mf=somaAcumMF/100;
+    return { total, rows, fundo:{massa:fundoM, perc:fundoPerc, acum:fundoAcum, pass:fundoPass}, mf };
+  }
+  function updateComputedOnly(){
+    const { total, rows, fundo, mf }=computeGranulometry(modalGranMasses);
+    totalMassaRetidaInput.value= total ? fmtPt(total,2) : "0,00";
+    mfCalculadoInput.value= total ? fmtPt(mf,2) : "0,00";
+    const rowEls=granTbody.querySelectorAll("tr");
+    rows.forEach((r,idx)=>{
+      const tr=rowEls[idx]; if(!tr) return;
+      tr.querySelector('[data-col="perc"]').textContent=`${fmtPt(r.perc,1)}%`;
+      tr.querySelector('[data-col="acum"]').textContent=`${fmtPt(r.acum,1)}%`;
+      tr.querySelector('[data-col="pass"]').textContent=`${fmtPt(r.pass,1)}%`;
+    });
+    fundoPercEl.textContent=`${fmtPt(fundo.perc,1)}%`;
+    fundoAcumEl.textContent=`${fmtPt(fundo.acum,1)}%`;
+    fundoPassEl.textContent=`${fmtPt(fundo.pass,1)}%`;
+  }
+  function commitValueFromInput(inputEl){ const key=inputEl.getAttribute("data-sieve"); modalGranMasses[String(key)]=inputEl.value; updateComputedOnly(); }
+  function focusNextGranInput(currentEl){ const all=Array.from(carModalBackdrop.querySelectorAll("input.gran-massa")); const idx=all.indexOf(currentEl); if(idx>=0 && idx<all.length-1){ all[idx+1].focus(); all[idx+1].select?.(); } }
+  function renderGranTableInitial(){
+    granTbody.innerHTML="";
+    for(const mm of SIEVES_MM){
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td class="nowrap">${String(mm).replace(".", ",")}</td>
+        <td class="right"><input data-sieve="${mm}" class="gran-massa gran-input" inputmode="decimal" value="${(modalGranMasses[String(mm)] ?? "")}" placeholder="0" /></td>
+        <td class="right" data-col="perc">0,0%</td>
+        <td class="right" data-col="acum">0,0%</td>
+        <td class="right" data-col="pass">0,0%</td>
+      `;
+      granTbody.appendChild(tr);
+    }
+    fundoMassaEl.innerHTML=`<input data-sieve="fundo" class="gran-massa gran-input" inputmode="decimal" value="${(modalGranMasses["fundo"] ?? "")}" placeholder="0" />`;
+    carModalBackdrop.querySelectorAll("input.gran-massa").forEach(inp=>{
+      inp.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); commitValueFromInput(inp); focusNextGranInput(inp);} });
+      inp.addEventListener("blur", ()=>commitValueFromInput(inp));
+    });
+    updateComputedOnly();
+  }
+  function openCaracteristicasModal(){
+    const c=getSelectedCliente(); const ins=getSelectedInsumo(); if(!(c&&ins)) return;
+    carModalSub.textContent=`Cliente: ${c.empresa} • Insumo: ${ins.insumo} (${ins.tipo}) • Fornecedor: ${ins.fornecedor}`;
+    carEditStatus.textContent=ins.insumo;
+    const car=ins.caracteristicas||{};
+    massaEspecificaInput.value=(car.massaEspecifica ?? "");
+    modalGranMasses={}; const saved=car.granulometria?.masses||{};
+    for(const mm of SIEVES_MM) modalGranMasses[String(mm)]=(saved[String(mm)] ?? "");
+    modalGranMasses["fundo"]=(saved["fundo"] ?? "");
+    renderGranTableInitial();
+    carModalBackdrop.style.display="flex";
+  }
+  function closeCaracteristicasModal(){ carModalBackdrop.style.display="none"; }
+
+  function formatMassaEspecificaDisplay(val){ const n=Number(val); return Number.isFinite(n)? n.toLocaleString("pt-BR",{minimumFractionDigits:3, maximumFractionDigits:3}) : "—"; }
+  function formatMFDisplay(val){ const n=Number(val); return Number.isFinite(n)? n.toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2}) : "—"; }
+
+  const trClienteSel=$("#trCliente");
+  const trMaterialSelects=[ $("#matCimento"), $("#matAdicao"), $("#matAgua"), $("#matAreia1"), $("#matAreia2"), $("#matAreia3"), $("#matBrita0"), $("#matBrita12"), $("#matBrita1"), $("#matAditivo1"), $("#matAditivo2") ];
+
+  function setOptions(selectEl, options, keepValue=true){
+    const prev=selectEl.value; selectEl.innerHTML="";
+    for(const opt of options){ const o=document.createElement("option"); o.value=opt.value; o.textContent=opt.label; selectEl.appendChild(o); }
+    if(keepValue && options.some(o=>o.value===prev)) selectEl.value=prev; else selectEl.value="";
+  }
+  function syncTracoClientesSelect(forceSelectTopCliente){
+    const opts=[{value:"",label:"(selecionar...)"}, ...state.clientes.map(c=>({value:c.id,label:c.empresa}))];
+    const prev=trClienteSel.value;
+    setOptions(trClienteSel, opts, true);
+    if(forceSelectTopCliente && !trClienteSel.value && state.selectedClienteId) trClienteSel.value=state.selectedClienteId;
+    if(prev && !opts.some(o=>o.value===prev)) trClienteSel.value=state.selectedClienteId || "";
+  }
+  function getInsumosOptionsForCliente(clienteId){
+    const c=state.clientes.find(x=>x.id===clienteId)||null;
+    const base=[{value:"",label:"(selecionar...)"}];
+    if(!c) return base;
+    const insumos=Array.isArray(c.insumos)?c.insumos:[];
+    return base.concat(insumos.map(i=>({value:i.id,label:`${i.insumo} • ${i.tipo} • ${i.fornecedor}`})));
+  }
+  function syncTracoMaterialSelects(clearSelections){
+    const options=getInsumosOptionsForCliente(trClienteSel.value||"");
+    trMaterialSelects.forEach(sel=>setOptions(sel, options, !clearSelections));
+  }
+  function syncTracoUI(forceSelectTopCliente=false){
+    syncTracoClientesSelect(forceSelectTopCliente);
+    syncTracoMaterialSelects(false);
+  }
+  trClienteSel.addEventListener("change", ()=>{ syncTracoMaterialSelects(true); });
+
+  const trVolumeInput = trVolume;
+  function handleVolumeDesejadoChange(){
+    const v = numOr0(trVolumeInput.value);
+    state.printForm.volumeM3 = v > 0 ? v : "";
+    saveState();
+    renderPrintPanel();
+  }
+  trVolumeInput.addEventListener("input", handleVolumeDesejadoChange);
+  trVolumeInput.addEventListener("change", handleVolumeDesejadoChange);
+
+  const inArgamassa=$("#inArgamassa");
+  const inAC=$("#inAC");
+  const inAr=$("#inAr");
+  const inH=$("#inH");
+  const inAdicaoPct=$("#inAdicaoPct");
+  const inAditivo1Pct=$("#inAditivo1Pct");
+  const inAditivo2Pct=$("#inAditivo2Pct");
+
+  const matCimento=$("#matCimento");
+  const matAdicao=$("#matAdicao");
+  const matAgua=$("#matAgua");
+  const matAreia1=$("#matAreia1");
+  const matAreia2=$("#matAreia2");
+  const matAreia3=$("#matAreia3");
+  const matBrita0=$("#matBrita0");
+  const matBrita12=$("#matBrita12");
+  const matBrita1=$("#matBrita1");
+  const matAditivo1=$("#matAditivo1");
+  const matAditivo2=$("#matAditivo2");
+
+  const pctAreia1=$("#pctAreia1");
+  const pctAreia2=$("#pctAreia2");
+  const pctAreia3=$("#pctAreia3");
+  const pctBrita0=$("#pctBrita0");
+  const pctBrita12=$("#pctBrita12");
+  const pctBrita1=$("#pctBrita1");
+  const areiasSumHint=$("#areiasSumHint");
+  const britasSumHint=$("#britasSumHint");
+
+  const calcTracoBtn=$("#calcTracoBtn");
+  const tracoStatus=$("#tracoStatus");
+  const outM=$("#outM");
+  const outA=$("#outA");
+  const outB=$("#outB");
+  const outCc=$("#outCc");
+  const tracoTbody=$("#tracoTbody");
+  const tracoEmpty=$("#tracoEmpty");
+
+  function updatePctHints(){
+    const sAreias=numOr0(pctAreia1.value)+numOr0(pctAreia2.value)+numOr0(pctAreia3.value);
+    const sBritas=numOr0(pctBrita0.value)+numOr0(pctBrita12.value)+numOr0(pctBrita1.value);
+    areiasSumHint.textContent=`Soma: ${fmtPt(sAreias,1)}%`;
+    britasSumHint.textContent=`Soma: ${fmtPt(sBritas,1)}%`;
+    areiasSumHint.style.color=Math.abs(sAreias-100)<0.0001?"var(--muted)":"var(--danger)";
+    britasSumHint.style.color=Math.abs(sBritas-100)<0.0001?"var(--muted)":"var(--danger)";
+  }
+  [pctAreia1,pctAreia2,pctAreia3,pctBrita0,pctBrita12,pctBrita1].forEach(el=>el.addEventListener("input",updatePctHints));
+
+  function findInsumoById(cliente,id){ if(!cliente||!id) return null; return (cliente.insumos||[]).find(i=>i.id===id)||null; }
+  function getMEandMF(insumo){ const me=insumo?.caracteristicas?.massaEspecifica ?? null; const mf=insumo?.caracteristicas?.mf ?? null; return {me,mf}; }
+  function getDensity(insumo){ const me=insumo?.caracteristicas?.massaEspecifica; const n=Number(me); return Number.isFinite(n)?n:0; }
+
+  function calcTraco(){
+    const cliente=state.clientes.find(c=>c.id===(trClienteSel.value||""))||null;
+    if(!cliente){ alert("Selecione um cliente no Traço."); return; }
+    const sumAreias=numOr0(pctAreia1.value)+numOr0(pctAreia2.value)+numOr0(pctAreia3.value);
+    const sumBritas=numOr0(pctBrita0.value)+numOr0(pctBrita12.value)+numOr0(pctBrita1.value);
+    if(Math.abs(sumAreias-100)>0.0001){ alert("A soma das areias deve ser 100%."); return; }
+    if(Math.abs(sumBritas-100)>0.0001){ alert("A soma das britas deve ser 100%."); return; }
+    const argamassa=numOr0(inArgamassa.value)/100;
+    const ac=numOr0(inAC.value);
+    const ar=numOr0(inAr.value)/100;
+    const h=numOr0(inH.value)/100;
+    const adicaoFrac=numOr0(inAdicaoPct.value)/100;
+    const adit1=numOr0(inAditivo1Pct.value)/100;
+    const adit2=numOr0(inAditivo2Pct.value)/100;
+    if(!(h>0)){ alert("H deve ser > 0."); return; }
+
+    const pA1=numOr0(pctAreia1.value)/100, pA2=numOr0(pctAreia2.value)/100, pA3=numOr0(pctAreia3.value)/100;
+    const pB0=numOr0(pctBrita0.value)/100, pB12=numOr0(pctBrita12.value)/100, pB1=numOr0(pctBrita1.value)/100;
+
+    const m=(ac/h) - (1 + adicaoFrac);
+    const a=(argamassa * ((1 + adicaoFrac) + m)) - (1 + adicaoFrac);
+    const b=m - a;
+
+    const unit={
+      cimento:1,
+      adicao:adicaoFrac,
+      areia1:a*pA1,
+      areia2:a*pA2,
+      areia3:a*pA3,
+      brita0:b*pB0,
+      brita12:b*pB12,
+      brita1:b*pB1,
+      agua:ac,
+      aditivo1:adit1,
+      aditivo2:adit2
+    };
+
+    const sel={
+      cimento: findInsumoById(cliente, matCimento.value),
+      adicao: findInsumoById(cliente, matAdicao.value),
+      areia1: findInsumoById(cliente, matAreia1.value),
+      areia2: findInsumoById(cliente, matAreia2.value),
+      areia3: findInsumoById(cliente, matAreia3.value),
+      brita0: findInsumoById(cliente, matBrita0.value),
+      brita12: findInsumoById(cliente, matBrita12.value),
+      brita1: findInsumoById(cliente, matBrita1.value),
+      agua: findInsumoById(cliente, matAgua.value),
+      aditivo1: findInsumoById(cliente, matAditivo1.value),
+      aditivo2: findInsumoById(cliente, matAditivo2.value),
+    };
+
+    let soma=0; for(const key of Object.keys(unit)){ const Bi=getDensity(sel[key]); const Di=unit[key]; if(Di>0 && Bi>0) soma+=Di/Bi; }
+    if(!(soma>0)){ alert("Para calcular Cc: selecione materiais com M.E cadastrada."); return; }
+    const Cc=(1000*(1-ar))/soma;
+
+    const volume=Math.max(0, numOr0(trVolume.value)||1);
+    const traco1m3=Object.fromEntries(Object.entries(unit).map(([k,v])=>[k, Cc*v]));
+    const tracoVol=Object.fromEntries(Object.entries(traco1m3).map(([k,v])=>[k, v*volume]));
+
+    outM.value=fmtPt(m,4);
+    outA.value=fmtPt(a,4);
+    outB.value=fmtPt(b,4);
+    outCc.value=fmtPt(Cc,1);
+
+    const rows=[
+      ["Cimento","cimento"],
+      ["Adição","adicao"],
+      ["Areia 1","areia1"],
+      ["Areia 2","areia2"],
+      ["Areia 3","areia3"],
+      ["Brita 0","brita0"],
+      ["Brita 1/2","brita12"],
+      ["Brita 1","brita1"],
+      ["Água","agua"],
+      ["Aditivo 1","aditivo1"],
+      ["Aditivo 2","aditivo2"],
+    ];
+
+    tracoTbody.innerHTML="";
+    for(const [label,key] of rows){
+      const {me,mf}=getMEandMF(sel[key]);
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td>${label}${sel[key]?`<br/><span style="color:var(--muted); font-size:11px;">${escapeHtml(sel[key].insumo)}</span>`:`<br/><span style="color:var(--muted); font-size:11px;">(não selecionado)</span>`}</td>
+        <td class="nowrap">${me?Number(me).toLocaleString("pt-BR",{minimumFractionDigits:3, maximumFractionDigits:3}):"—"}</td>
+        <td class="nowrap">${(mf!==null&&mf!==undefined&&mf!=="")?Number(mf).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2}):"—"}</td>
+        <td class="right nowrap">${fmtPt(unit[key],4)}</td>
+        <td class="right nowrap">${fmtPt(traco1m3[key],1)}</td>
+        <td class="right nowrap">${fmtPt(tracoVol[key],1)}</td>
+      `;
+      tracoTbody.appendChild(tr);
+    }
+
+    tracoEmpty.style.display="none";
+    tracoStatus.textContent=`Cc=${fmtPt(Cc,1)} kg/m³ • Volume=${fmtPt(volume,2)} m³`;
+
+    state.lastTraco={
+      id: state.lastTraco?.id || uid(),
+      volume,
+      clienteId: cliente?.id || null,
+      clienteNome: cliente?.empresa || "(sem cliente)",
+      inputs:{
+        argamassa:numOr0(inArgamassa.value),
+        ac:numOr0(inAC.value),
+        ar:numOr0(inAr.value),
+        h:numOr0(inH.value),
+        adicaoPct:numOr0(inAdicaoPct.value),
+        aditivo1Pct:numOr0(inAditivo1Pct.value),
+        aditivo2Pct:numOr0(inAditivo2Pct.value),
+        pctAreia1:numOr0(pctAreia1.value),
+        pctAreia2:numOr0(pctAreia2.value),
+        pctAreia3:numOr0(pctAreia3.value),
+        pctBrita0:numOr0(pctBrita0.value),
+        pctBrita12:numOr0(pctBrita12.value),
+        pctBrita1:numOr0(pctBrita1.value)
+      },
+      materials: rows.map(([label,key])=>({label,key,insumo: sel[key]||null})),
+      traco1m3,
+      tracoVol,
+      titulo: trTitulo.value || "",
+      dataEstudo: trData.value || ""
+    };
+    state.printForm.volumeM3 = volume;
+
+    saveState();
+    renderPrintPanel();
+  }
+  calcTracoBtn.addEventListener("click", calcTraco);
+
+  const editFormTableBody=document.getElementById("editFormTableBody");
+  const editableFormFields=[
+    ["Número do traço","numeroTraco"],
+    ["Data","data"],
+    ["Cliente (só leitura)","__cliente__"],
+    ["Fck","fck"],
+    ["Abatimento","abatimento"],
+    ["Britas","britas"],
+    ["Volume desejado (m³)","volumeM3"],
+    ["Volume laboratório (m³)","volumeLab"],
+    ["Volume (L)","volumeL"],
+    ["Slump","slump"],
+    ["Slump 15","slump15"],
+    ["Slump corrigido","slumpCorrigido"],
+    ["Água adicionada (kg)","aguaAdicionada"],
+    ["Água retida (kg)","aguaRetida"],
+    ["Água p/correção (kg)","aguaCorrecao"],
+    ["Temp. ambiente (°C)","tempAmb"],
+    ["Umidade ambiente (%)","umidAmb"],
+    ["Temp. do concreto (°C)","tempConc"],
+    ["M.E concreto (g/cm³)","meConc"],
+    ["M. Total (Kg)","mTotal"],
+    ["Observações","observacoes"]
+  ];
+  function getEffectiveVolume(){
+    const lab=numOr0(state.printForm.volumeLab);
+    const base=numOr0(state.printForm.volumeM3) || state.lastTraco?.volume || 1;
+    return lab>0 ? lab : (base>0 ? base : 1);
+  }
+  function renderEditableFormTable(){
+    if(!editFormTableBody) return;
+    editFormTableBody.innerHTML="";
+    const last=state.lastTraco;
+    editableFormFields.forEach(([label,key])=>{
+      const tr=document.createElement("tr");
+      const val= key==="__cliente__" ? (last?.clienteNome || "(sem cliente)") : (state.printForm[key] ?? "");
+      tr.innerHTML=`
+        <td>${label}</td>
+        <td class="editable-cell" data-key="${key}" ${key==="__cliente__" ? 'contenteditable="false" style="background:#f4f4f4;"' : 'contenteditable="true"'}>${escapeHtml(String(val))}</td>
+      `;
+      editFormTableBody.appendChild(tr);
+    });
+    editFormTableBody.querySelectorAll(".editable-cell[contenteditable='true']").forEach(td=>{
+      td.addEventListener("blur", ()=>{
+        const key=td.getAttribute("data-key");
+        const value=td.textContent||"";
+        state.printForm[key]=value;
+        saveState();
+        renderPrintPanel();
+      });
+      td.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); td.blur(); }});
+    });
+  }
+
+  const printSyncBtn=$("#printSyncBtn");
+  const printPdfBtn=$("#printPdfBtn");
+  const printMateriaisInfo=$("#printMateriaisInfo");
+  const printDosagemTbody=$("#printDosagemTbody");
+  const printResistenciaTbody=$("#printResistenciaTbody");
+  const saveTraceBtn=$("#saveTraceBtn");
+
+  function ensurePrintDefaults(){
+    if(!state.printForm) state.printForm={};
+    if(!state.printForm.data) state.printForm.data=new Date().toISOString().slice(0,10);
+    if(state.printForm.codigo===undefined) state.printForm.codigo="";
+    if(state.printForm.tituloLivre===undefined) state.printForm.tituloLivre="";
+    if(!state.printForm.numeroTraco) state.printForm.numeroTraco="001";
+    if(!state.printForm.volumeM3) state.printForm.volumeM3=state.lastTraco?.volume ?? 1;
+    if(state.printForm.volumeLab===undefined) state.printForm.volumeLab="";
+    if(!state.printRows) state.printRows={};
+    if(!state.printForm.resistencias){
+      state.printForm.resistencias=RUPTURA_DIAS.map(d=>({ idade:`${d} dias`, comp:"", aashto:"", tracao:"", evol:"" }));
+    }
+    if(state.printForm.resistencias.length < RUPTURA_DIAS.length){
+      const existing=state.printForm.resistencias;
+      state.printForm.resistencias=RUPTURA_DIAS.map((d,idx)=> existing[idx] || { idade:`${d} dias`, comp:"", aashto:"", tracao:"", evol:"" });
+    }
+  }
+
+  function bindPrintFormInputs(){
+    document.querySelectorAll("[data-print-key]").forEach(el=>{
+      const key=el.getAttribute("data-print-key");
+      if(!key) return;
+      if(state.printForm[key]!==undefined) el.value=state.printForm[key];
+      el.addEventListener("input", ()=>{
+        state.printForm[key]=el.value;
+        saveState();
+        renderPrintPanel();
+      });
+    });
+  }
+
+  function getPrintRowState(key){
+    if(!state.printRows[key]) state.printRows[key]={ umidade:"" };
+    return state.printRows[key];
+  }
+
+  function materialTeor(key, inputs){
+    if(!inputs) return "-";
+    if(state.printRows[key]?.mat_teor) return state.printRows[key].mat_teor;
+    if(key==="adicao") return `${fmtPt(inputs.adicaoPct,2)}%`;
+    if(key==="aditivo1") return `${fmtPt(inputs.aditivo1Pct,3)}%`;
+    if(key==="aditivo2") return `${fmtPt(inputs.aditivo2Pct,3)}%`;
+    return "-";
+  }
+  function materialDescricao(key, ins){ return state.printRows[key]?.mat_desc || (ins ? `${ins.insumo} • ${ins.fornecedor}` : "-"); }
+  function materialProporcao(key, inputs){
+    if(!inputs) return "-";
+    if(key==="areia1") return `${fmtPt(inputs.pctAreia1,1)}%`;
+    if(key==="areia2") return `${fmtPt(inputs.pctAreia2,1)}%`;
+    if(key==="areia3") return `${fmtPt(inputs.pctAreia3,1)}%`;
+    if(key==="brita0") return `${fmtPt(inputs.pctBrita0,1)}%`;
+    if(key==="brita12") return `${fmtPt(inputs.pctBrita12,1)}%`;
+    if(key==="brita1") return `${fmtPt(inputs.pctBrita1,1)}%`;
+    return "-";
+  }
+
+  function computeCurrentDosagemSnapshot(){
+    const last=state.lastTraco;
+    const volume=getEffectiveVolume();
+    const snapshot={ volume, umidadeExtras:{}, totalUmidade:0, rows:[] };
+    if(!(last && last.materials)) return snapshot;
+
+    last.materials.forEach(mat=>{
+      if(mat.key==="agua") return;
+      const rowState=getPrintRowState(mat.key);
+      const umidadePct=numOr0(rowState.umidade);
+      const dosagemBase=(last.traco1m3[mat.key] ?? 0) * volume;
+      const extra=dosagemBase * (umidadePct/100);
+      snapshot.umidadeExtras[mat.key]=extra;
+      snapshot.totalUmidade+=extra;
+    });
+
+    last.materials.forEach(mat=>{
+      const key=mat.key;
+      const dosagem=(last.traco1m3[key] ?? 0) * volume;
+      const umidadeExtra=snapshot.umidadeExtras[key] ?? 0;
+      let corrigido=dosagem + umidadeExtra;
+      if(key==="agua") corrigido=Math.max(0, dosagem - snapshot.totalUmidade);
+      snapshot.rows.push({ key, label: mat.label, dosagem, umidadePct: numOr0(getPrintRowState(key).umidade), corrigido });
+    });
+
+    snapshot.last=last;
+    return snapshot;
+  }
+
+  function renderPrintPanel(){
+    ensurePrintDefaults();
+    bindPrintFormInputs();
+    renderEditableFormTable();
+
+    const last=state.lastTraco;
+    const volume=getEffectiveVolume();
+    document.getElementById("printClienteNome")?.setAttribute("value", last?.clienteNome || "(sem cliente)");
+    if(document.getElementById("printClienteNome")) document.getElementById("printClienteNome").value = last?.clienteNome || "(sem cliente)";
+
+    const tbodyMat=printMateriaisInfo.querySelector("tbody");
+    if(tbodyMat){
+      tbodyMat.innerHTML="";
+      if(last && last.materials){
+        last.materials.forEach(mat=>{
+          const tr=document.createElement("tr");
+          const ins=mat.insumo;
+          const desc=materialDescricao(mat.key, ins);
+          const teorVal=materialTeor(mat.key, last.inputs);
+          tr.innerHTML=`
+            <td>${mat.label}</td>
+            <td contenteditable="true" data-mat="${mat.key}" data-field="desc">${escapeHtml(desc)}</td>
+            <td class="right nowrap" contenteditable="true" data-mat="${mat.key}" data-field="teor">${escapeHtml(teorVal)}</td>
+          `;
+          tbodyMat.appendChild(tr);
+        });
+        tbodyMat.querySelectorAll("[contenteditable='true']").forEach(td=>{
+          td.addEventListener("blur", ()=>{
+            const key=td.getAttribute("data-mat");
+            const field=td.getAttribute("data-field");
+            state.printRows[key]=state.printRows[key]||{};
+            state.printRows[key][`mat_${field}`]=td.textContent||"";
+            saveState();
+          });
+          td.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){e.preventDefault(); td.blur();}});
+        });
+      } else {
+        const tr=document.createElement("tr");
+        tr.innerHTML=`<td colspan="3">Calcule o traço para preencher as informações.</td>`;
+        tbodyMat.appendChild(tr);
+      }
+    }
+
+    printDosagemTbody.innerHTML="";
+    const snap=computeCurrentDosagemSnapshot();
+    if(last && last.materials){
+      last.materials.forEach(mat=>{
+        const key=mat.key;
+        const rowState=getPrintRowState(key);
+        const dosagem=(last.traco1m3[key] ?? 0) * volume;
+        const umidadeExtra=snap.umidadeExtras[key] ?? 0;
+        let corrigido=dosagem + umidadeExtra;
+        if(key==="agua") corrigido=Math.max(0, dosagem - snap.totalUmidade);
+
+        const tr=document.createElement("tr");
+        tr.innerHTML=`
+          <td>${mat.label}</td>
+          <td class="right nowrap">${fmtPt(dosagem,1)}</td>
+          <td class="center">${materialProporcao(key, last.inputs)}</td>
+          <td class="center"><input data-row="${key}" data-field="umidade" value="${formatPercentDisplay(rowState.umidade)}" /></td>
+          <td class="right nowrap">${fmtPt(corrigido,1)}</td>
+        `;
+        printDosagemTbody.appendChild(tr);
+      });
+      printDosagemTbody.querySelectorAll('input[data-field="umidade"]').forEach(input=>{
+        const commit=()=>{ const rowKey=input.getAttribute("data-row"); const rs=getPrintRowState(rowKey); rs.umidade=parsePercentInput(input.value); saveState(); renderPrintPanel(); };
+        input.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){e.preventDefault(); commit(); input.blur(); }});
+        input.addEventListener("blur", commit);
+      });
+    } else {
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td colspan="5">Calcule o traço para preencher a dosagem.</td>`;
+      printDosagemTbody.appendChild(tr);
+    }
+
+    const baseDate=state.printForm.data || last?.dataEstudo;
+    const ruptureDates=RUPTURA_DIAS.map(d=>addDays(baseDate, d));
+    printResistenciaTbody.innerHTML="";
+    state.printForm.resistencias.forEach((row,idx)=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td>${row.idade || `${RUPTURA_DIAS[idx]} dias`}</td>
+        <td class="center"><input value="${ruptureDates[idx] ?? ""}" disabled /></td>
+        <td class="right"><input data-res-idx="${idx}" data-res-field="comp" value="${row.comp ?? ""}" /></td>
+        <td class="right"><input data-res-idx="${idx}" data-res-field="aashto" value="${row.aashto ?? ""}" /></td>
+        <td class="right"><input data-res-idx="${idx}" data-res-field="tracao" value="${row.tracao ?? ""}" /></td>
+        <td class="right"><input data-res-idx="${idx}" data-res-field="evol" value="${row.evol ?? ""}" /></td>
+      `;
+      printResistenciaTbody.appendChild(tr);
+    });
+    printResistenciaTbody.querySelectorAll("input[data-res-idx]").forEach(input=>{
+      input.addEventListener("input", ()=>{ const idx=Number(input.getAttribute("data-res-idx")); const field=input.getAttribute("data-res-field"); state.printForm.resistencias[idx][field]=input.value; saveState(); });
+    });
+
+    const ar=last?.inputs?.ar ?? 0;
+    $("#printArInc").value=fmtPt(ar,1);
+    $("#printAC").value= last ? fmtPt(last.inputs.ac,3) : "";
+    $("#printAagl").value= last ? fmtPt(last.inputs.ac,3) : "";
+    $("#printK").value= last ? `${fmtPt(last.inputs.argamassa,2)}%` : "";
+    $("#printH").value= last ? `${fmtPt(last.inputs.h,2)}%` : "";
+    $("#printACReal").value= last ? fmtPt(last.inputs.ac,3) : "";
+    $("#printHReal").value= last ? `${fmtPt(last.inputs.h,2)}%` : "";
+
+    const snap2=computeCurrentDosagemSnapshot();
+    const aguaDosagem=(last?.traco1m3?.agua ?? 0) * volume;
+    const aguaInicial=Math.max(0, aguaDosagem - snap2.totalUmidade);
+    $("#printAguaInicial").value=fmtPt(aguaInicial,1);
+    const aguaAd=numOr0(state.printForm.aguaAdicionada);
+    const aguaRet=numOr0(state.printForm.aguaRetida);
+    const aguaCorr=numOr0(state.printForm.aguaCorrecao);
+    const aguaFinal=aguaInicial + aguaAd - aguaRet + aguaCorr;
+    $("#printAguaFinal").value=fmtPt(aguaFinal,1);
+
+    document.querySelector('[data-print-key="slump15"]').value = state.printForm.slump15 || "";
+    document.querySelector('[data-print-key="slumpCorrigido"]').value = state.printForm.slumpCorrigido || "";
+  }
+
+  printSyncBtn.addEventListener("click", renderPrintPanel);
+  printPdfBtn.addEventListener("click", ()=>{
+    setActiveTab("traco");
+    document.querySelector(".print-sheet")?.scrollIntoView({behavior:"smooth", block:"start"});
+    setTimeout(()=>window.print(),150);
+  });
+
+  function editableCell(td, onSave){
+    td.contentEditable="true";
+    td.addEventListener("blur", ()=>onSave(td.textContent || ""));
+    td.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); td.blur(); }});
+  }
+
+  function buildSnapshotForHistory(){
+    const last=state.lastTraco;
+    if(!last){ alert("Calcule o traço antes de salvar."); return null; }
+    const volume=getEffectiveVolume();
+    const snap=computeCurrentDosagemSnapshot();
+    const baseDate=state.printForm.data;
+    const ruptureDates=RUPTURA_DIAS.map(d=>addDays(baseDate, d));
+    const numeroTraco=state.printForm.numeroTraco || `T-${Date.now()}`;
+    const clienteNome=last.clienteNome || "(sem cliente)";
+    return {
+      id: uid(),
+      numeroTraco,
+      clienteNome,
+      createdAt: new Date().toISOString(),
+      form:{
+        data: state.printForm.data,
+        fck: state.printForm.fck,
+        abatimento: state.printForm.abatimento,
+        britas: state.printForm.britas,
+        volumeM3: volume,
+        volumeLab: state.printForm.volumeLab,
+        volumeL: state.printForm.volumeL,
+        horaInicio: state.printForm.horaInicio,
+        tempAmb: state.printForm.tempAmb,
+        umidAmb: state.printForm.umidAmb,
+        tempConc: state.printForm.tempConc,
+        meConc: state.printForm.meConc,
+        mTotal: state.printForm.mTotal,
+        slump: state.printForm.slump,
+        slump15: state.printForm.slump15,
+        slumpCorrigido: state.printForm.slumpCorrigido,
+        aguaAdicionada: state.printForm.aguaAdicionada,
+        aguaRetida: state.printForm.aguaRetida,
+        aguaCorrecao: state.printForm.aguaCorrecao,
+        observacoes: state.printForm.observacoes,
+        pesagem: state.printForm.pesagem,
+        conferencia: state.printForm.conferencia,
+        moldagem: state.printForm.moldagem
+      },
+      insumos: (last.materials||[]).map(m=>({ material:m.label, tipo:m.insumo?.tipo||"-", fornecedor:m.insumo?.fornecedor||"-", insumo:m.insumo?.insumo||"-", key:m.key })),
+      quantidades: snap.rows.map(r=>({ material:r.label, key:r.key, dosagem:r.dosagem, umidade:r.umidadePct, corrigido:r.corrigido })),
+      resultados: (state.printForm.resistencias||[]).map((r,idx)=>({ idade:r.idade, data:ruptureDates[idx]||"", comp:r.comp||"", tracao:r.tracao||"", evol:r.evol||"" }))
+    };
+  }
+
+  function renderHistorico(){
+    renderHistorico._impl?.();
+  }
+
+  function pickInsumo(insumos, key){
+    return (insumos||[]).find(x=>x.key===key) || null;
+  }
+  function fmtInsumo(ins){
+    if(!ins) return "-";
+    if(ins.display) return ins.display;
+    return `${ins.insumo||"-"} (${ins.tipo||"-"}/${ins.fornecedor||"-"})`;
+  }
+  function pickQuant(qs, key){
+    const f = (qs||[]).find(x=>x.key===key);
+    if(!f) return "-";
+    if(f.display) return f.display;
+    return `${fmtPt(f.dosagem,1)} kg / ${formatPercentDisplay(f.umidade)} / ${fmtPt(f.corrigido,1)} kg`;
+  }
+  function pickRes(resArr, idx){
+    const r = (resArr||[])[idx];
+    if(!r) return "-";
+    if(r.display) return r.display;
+    return `${r.data||"-"} / C=${r.comp||"-"} / T=${r.tracao||"-"} / Ev=${r.evol||"-"}`;
+  }
+
+  function toggleRowEditing(tr, editing){
+    const tds = Array.from(tr.querySelectorAll("td"));
+    const actionCell = tds.pop();
+    tds.forEach(td=>{
+      td.contentEditable = editing ? "true" : "false";
+      td.classList.toggle("editing-cell", editing);
+    });
+  }
+
+  function saveInsumosRowAtIndex(idx, values){
+    const traco = state.tracosHistorico[idx];
+    if(!traco) return;
+    traco.numeroTraco = values[0] || traco.numeroTraco;
+    traco.clienteNome = values[1] || traco.clienteNome;
+    const keys=["cimento","adicao","areia1","areia2","areia3","brita0","brita12","brita1","agua","aditivo1","aditivo2"];
+    keys.forEach((key,i)=>{
+      const txt = values[i+2] || "";
+      let entry = (traco.insumos||[]).find(x=>x.key===key);
+      if(!entry){ entry = { material:key, key, insumo:txt, tipo:"", fornecedor:"" }; (traco.insumos||[]).push(entry); }
+      entry.insumo = txt;
+      entry.display = txt;
+    });
+    saveState();
+    renderHistorico();
+  }
+
+  function saveQuantRowAtIndex(idx, values){
+    const traco = state.tracosHistorico[idx];
+    if(!traco) return;
+    traco.numeroTraco = values[0] || traco.numeroTraco;
+    traco.clienteNome = values[1] || traco.clienteNome;
+    const keys=["cimento","adicao","areia1","areia2","areia3","brita0","brita12","brita1","agua","aditivo1","aditivo2"];
+    keys.forEach((key,i)=>{
+      const txt = values[i+2] || "";
+      let entry = (traco.quantidades||[]).find(x=>x.key===key);
+      if(!entry){ entry = { key, dosagem:0, umidade:0, corrigido:0 }; (traco.quantidades||[]).push(entry); }
+      entry.display = txt;
+    });
+    saveState();
+    renderHistorico();
+  }
+
+  function saveResRowAtIndex(idx, values){
+    const traco = state.tracosHistorico[idx];
+    if(!traco) return;
+    traco.numeroTraco = values[0] || traco.numeroTraco;
+    traco.clienteNome = values[1] || traco.clienteNome;
+    const resArr = traco.resultados || [];
+    for(let i=0;i<RUPTURA_DIAS.length;i++){
+      const txt = values[i+2] || "";
+      if(!resArr[i]) resArr[i] = { idade:`${RUPTURA_DIAS[i]} dias`, data:"", comp:"", tracao:"", evol:"" };
+      resArr[i].display = txt;
+    }
+    traco.resultados = resArr;
+    saveState();
+    renderHistorico();
+  }
+
+  function saveFormRowAtIndex(idx, values){
+    const traco = state.tracosHistorico[idx];
+    if(!traco) return;
+    traco.numeroTraco = values[0] || traco.numeroTraco;
+    traco.clienteNome = values[1] || traco.clienteNome;
+    const map=["data","slump","slump15","slumpCorrigido","aguaAdicionada","aguaRetida","tempConc","tempAmb","umidAmb","volumeM3","volumeLab"];
+    const form = traco.form || {};
+    map.forEach((key,i)=>{ form[key] = values[i+2] || form[key] || ""; });
+    traco.form = form;
+    traco.formEdits = { ...traco.formEdits, ...form };
+    saveState();
+  }
+
+  renderHistorico._impl = function(){
+    const hist=state.tracosHistorico||[];
+    const histInsumosTbody=$("#histInsumosTbody");
+    const histQuantTbody=$("#histQuantTbody");
+    const histResultadosTbody=$("#histResultadosTbody");
+    const histFormTbody=$("#histFormTbody");
+    if(!hist.length){
+      histInsumosTbody.innerHTML=`<tr><td colspan="14">Nenhum traço salvo.</td></tr>`;
+      histQuantTbody.innerHTML=`<tr><td colspan="14">Nenhum traço salvo.</td></tr>`;
+      histResultadosTbody.innerHTML=`<tr><td colspan="10">Nenhum traço salvo.</td></tr>`;
+      histFormTbody.innerHTML=`<tr><td colspan="14">Nenhum traço salvo.</td></tr>`;
+      return;
+    }
+
+    histInsumosTbody.innerHTML="";
+    hist.forEach((traco, idx)=>{
+      const ins = traco.insumos||[];
+      const row=document.createElement("tr");
+      row.dataset.histIndex = idx;
+      row.innerHTML=`
+        <td>${escapeHtml(traco.numeroTraco)}</td>
+        <td>${escapeHtml(traco.clienteNome||"-")}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"cimento")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"adicao")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"areia1")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"areia2")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"areia3")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"brita0")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"brita12")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"brita1")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"agua")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"aditivo1")))}</td>
+        <td>${escapeHtml(fmtInsumo(pickInsumo(ins,"aditivo2")))}</td>
+        <td class="nowrap">
+          <button type="button" class="warn" data-action="edit">Editar</button>
+          <button type="button" class="danger" data-action="delete">Excluir</button>
+        </td>
+      `;
+      const editBtn = row.querySelector('[data-action="edit"]');
+      editBtn.addEventListener("click", ()=>{
+        const editing = editBtn.dataset.mode !== "save";
+        if(editing){
+          editBtn.textContent="Salvar";
+          editBtn.dataset.mode="save";
+          toggleRowEditing(row,true);
+        }else{
+          const values = Array.from(row.querySelectorAll("td")).slice(0,-1).map(td=>td.textContent.trim());
+          toggleRowEditing(row,false);
+          editBtn.textContent="Editar";
+          editBtn.dataset.mode="edit";
+          saveInsumosRowAtIndex(idx, values);
+        }
+      });
+      row.querySelector('[data-action="delete"]').addEventListener("click", ()=>{
+        if(!confirm("Excluir este registro do histórico?")) return;
+        state.tracosHistorico = state.tracosHistorico.filter((_,i)=>i!==idx);
+        saveState(); renderHistorico();
+      });
+      histInsumosTbody.appendChild(row);
+    });
+
+    histQuantTbody.innerHTML="";
+    hist.forEach((traco, idx)=>{
+      const qs=traco.quantidades||[];
+      const row=document.createElement("tr");
+      row.innerHTML=`
+        <td>${escapeHtml(traco.numeroTraco)}</td>
+        <td>${escapeHtml(traco.clienteNome||"-")}</td>
+        <td>${escapeHtml(pickQuant(qs,"cimento"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"adicao"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"areia1"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"areia2"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"areia3"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"brita0"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"brita12"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"brita1"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"agua"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"aditivo1"))}</td>
+        <td>${escapeHtml(pickQuant(qs,"aditivo2"))}</td>
+        <td class="nowrap">
+          <button type="button" class="warn" data-action="edit">Editar</button>
+          <button type="button" class="danger" data-action="delete">Excluir</button>
+        </td>
+      `;
+      const editBtn=row.querySelector('[data-action="edit"]');
+      editBtn.addEventListener("click", ()=>{
+        const editing = editBtn.dataset.mode!=="save";
+        if(editing){
+          editBtn.textContent="Salvar";
+          editBtn.dataset.mode="save";
+          toggleRowEditing(row,true);
+        }else{
+          const values = Array.from(row.querySelectorAll("td")).slice(0,-1).map(td=>td.textContent.trim());
+          toggleRowEditing(row,false);
+          editBtn.textContent="Editar";
+          editBtn.dataset.mode="edit";
+          saveQuantRowAtIndex(idx, values);
+        }
+      });
+      row.querySelector('[data-action="delete"]').addEventListener("click", ()=>{
+        if(!confirm("Excluir este registro do histórico?")) return;
+        state.tracosHistorico = state.tracosHistorico.filter((_,i)=>i!==idx);
+        saveState(); renderHistorico();
+      });
+      histQuantTbody.appendChild(row);
+    });
+
+    histResultadosTbody.innerHTML="";
+    hist.forEach((traco, idx)=>{
+      const res=traco.resultados||[];
+      const row=document.createElement("tr");
+      row.innerHTML=`
+        <td>${escapeHtml(traco.numeroTraco)}</td>
+        <td>${escapeHtml(traco.clienteNome||"-")}</td>
+        <td>${escapeHtml(pickRes(res,0))}</td>
+        <td>${escapeHtml(pickRes(res,1))}</td>
+        <td>${escapeHtml(pickRes(res,2))}</td>
+        <td>${escapeHtml(pickRes(res,3))}</td>
+        <td>${escapeHtml(pickRes(res,4))}</td>
+        <td>${escapeHtml(pickRes(res,5))}</td>
+        <td>${escapeHtml(pickRes(res,6))}</td>
+        <td class="nowrap">
+          <button type="button" class="warn" data-action="edit">Editar</button>
+          <button type="button" class="danger" data-action="delete">Excluir</button>
+        </td>
+      `;
+      const editBtn=row.querySelector('[data-action="edit"]');
+      editBtn.addEventListener("click", ()=>{
+        const editing = editBtn.dataset.mode!=="save";
+        if(editing){
+          editBtn.textContent="Salvar";
+          editBtn.dataset.mode="save";
+          toggleRowEditing(row,true);
+        }else{
+          const values = Array.from(row.querySelectorAll("td")).slice(0,-1).map(td=>td.textContent.trim());
+          toggleRowEditing(row,false);
+          editBtn.textContent="Editar";
+          editBtn.dataset.mode="edit";
+          saveResRowAtIndex(idx, values);
+        }
+      });
+      row.querySelector('[data-action="delete"]').addEventListener("click", ()=>{
+        if(!confirm("Excluir este registro do histórico?")) return;
+        state.tracosHistorico = state.tracosHistorico.filter((_,i)=>i!==idx);
+        saveState(); renderHistorico();
+      });
+      histResultadosTbody.appendChild(row);
+    });
+
+    histFormTbody.innerHTML="";
+    hist.forEach((traco, idx)=>{
+      const f=traco.form || {};
+      const row=document.createElement("tr");
+      row.innerHTML=`
+        <td>${escapeHtml(traco.numeroTraco)}</td>
+        <td>${escapeHtml(traco.clienteNome || "-")}</td>
+        <td>${escapeHtml(f.data || "-")}</td>
+        <td>${escapeHtml(f.slump || "-")}</td>
+        <td>${escapeHtml(f.slump15 || "-")}</td>
+        <td>${escapeHtml(f.slumpCorrigido || "-")}</td>
+        <td>${escapeHtml(f.aguaAdicionada || "-")}</td>
+        <td>${escapeHtml(f.aguaRetida || "-")}</td>
+        <td>${escapeHtml(f.tempConc || "-")}</td>
+        <td>${escapeHtml(f.tempAmb || "-")}</td>
+        <td>${escapeHtml(f.umidAmb || "-")}</td>
+        <td>${escapeHtml(f.volumeM3 ?? "-")}</td>
+        <td>${escapeHtml(f.volumeLab ?? "-")}</td>
+        <td class="nowrap">
+          <button type="button" class="warn" data-action="edit">Editar</button>
+          <button type="button" class="danger" data-action="delete">Excluir</button>
+        </td>
+      `;
+      const editBtn=row.querySelector('[data-action="edit"]');
+      editBtn.addEventListener("click", ()=>{
+        const editing = editBtn.dataset.mode!=="save";
+        if(editing){
+          editBtn.textContent="Salvar";
+          editBtn.dataset.mode="save";
+          toggleRowEditing(row,true);
+        }else{
+          const values = Array.from(row.querySelectorAll("td")).slice(0,-1).map(td=>td.textContent.trim());
+          toggleRowEditing(row,false);
+          editBtn.textContent="Editar";
+          editBtn.dataset.mode="edit";
+          saveFormRowAtIndex(idx, values);
+        }
+      });
+      row.querySelector('[data-action="delete"]').addEventListener("click", ()=>{
+        if(!confirm("Excluir este registro do histórico?")) return;
+        state.tracosHistorico = state.tracosHistorico.filter((_,i)=>i!==idx);
+        saveState(); renderHistorico();
+      });
+      histFormTbody.appendChild(row);
+    });
+  };
+
+  function summarizeInsumos(materials){
+    if(!materials) return "-";
+    return materials.map(m=>m.label).join(", ");
+  }
+  function salvarTraco(){
+    const cliente = state.clientes.find(c=>c.id===trClienteSel.value) || null;
+    if(!cliente){ alert("Selecione um cliente."); return; }
+    if(!state.lastTraco){ alert("Calcule o traço antes de salvar."); return; }
+    const titulo = trTitulo.value.trim();
+    const dataEstudo = trData.value || "";
+    if(!titulo){ alert("Informe um título do estudo."); return; }
+    if(!dataEstudo){ alert("Informe a data do estudo."); return; }
+    if(!confirm("Deseja salvar/inserir este traço?")) return;
+
+    const id = state.selectedTracoId || uid();
+    const snapshot = {
+      id,
+      clienteId: cliente.id,
+      clienteNome: cliente.empresa,
+      titulo,
+      dataEstudo,
+      volume: Math.max(0, numOr0(trVolume.value)||1),
+      inputs: state.lastTraco.inputs,
+      materials: state.lastTraco.materials,
+      traco1m3: state.lastTraco.traco1m3,
+      tracoVol: state.lastTraco.tracoVol,
+      resumoInsumos: summarizeInsumos(state.lastTraco.materials || [])
+    };
+
+    const existingIdx = state.tracosSalvos.findIndex(t=>t.id===id);
+    if(existingIdx>=0) state.tracosSalvos[existingIdx]=snapshot;
+    else state.tracosSalvos.unshift(snapshot);
+
+    state.lastTraco = snapshot;
+    state.selectedTracoId = id;
+    saveState();
+    renderTracosSalvos();
+    renderPrintPanel();
+    alert("Traço salvo e sincronizado com a impressão.");
+  }
+  salvarTracoBtn.addEventListener("click", salvarTraco);
+
+  function renderTracosSalvos(){
+    tracosSalvosTbody.innerHTML="";
+    if(!(state.tracosSalvos?.length)){ tracosSalvosEmpty.hidden=false; return; }
+    tracosSalvosEmpty.hidden=true;
+    state.tracosSalvos.forEach(traco=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td>${escapeHtml(traco.id)}</td>
+        <td>${escapeHtml(traco.clienteNome||"-")}</td>
+        <td>${escapeHtml(traco.titulo||"-")}</td>
+        <td>${escapeHtml(traco.dataEstudo||"-")}</td>
+        <td>${escapeHtml(traco.resumoInsumos||"-")}</td>
+        <td class="nowrap">
+          <button type="button" class="warn" data-action="edit">Editar</button>
+          <button type="button" class="danger" data-action="delete">Excluir</button>
+        </td>
+      `;
+      tr.querySelector('[data-action="edit"]').addEventListener("click", ()=>{
+        if(!confirm("Carregar este traço para edição e impressão?")) return;
+        state.selectedTracoId = traco.id;
+        state.lastTraco = traco;
+        trTitulo.value = traco.titulo || "";
+        trData.value = traco.dataEstudo || "";
+        trVolume.value = traco.volume || 1;
+        trClienteSel.value = traco.clienteId || "";
+        syncTracoMaterialSelects(true);
+        renderPrintPanel();
+        renderAll();
+      });
+      tr.querySelector('[data-action="delete"]').addEventListener("click", ()=>{
+        if(!confirm("Deseja realmente excluir este traço?")) return;
+        state.tracosSalvos = state.tracosSalvos.filter(t=>t.id!==traco.id);
+        if(state.selectedTracoId===traco.id) state.selectedTracoId=null;
+        saveState(); renderTracosSalvos();
+      });
+      tracosSalvosTbody.appendChild(tr);
+    });
+  }
+
+  function rupturasFromData(baseDateStr){
+    if(!baseDateStr) return [];
+    return RUPTURA_DIAS.map(d=>addDays(baseDateStr, d));
+  }
+  function monthLabel(dateStr){
+    if(!dateStr) return "-";
+    const d=new Date(`${dateStr}T00:00:00`);
+    const mm=String(d.getMonth()+1).padStart(2,"0");
+    const yyyy=d.getFullYear();
+    return `${mm}/${yyyy}`;
+  }
+  function buildEnsaioSnapshot(){
+    const last = state.lastTraco;
+    if(!last){ alert("Salve um traço antes."); return null; }
+    const baseDate = state.printForm.data || last.dataEstudo;
+    const rupturas = rupturasFromData(baseDate);
+    const id = uid();
+    return {
+      id,
+      tracoId: last.id || null,
+      clienteNome: last.clienteNome || "-",
+      titulo: last.titulo || state.printForm.tituloLivre || "-",
+      dataEstudo: baseDate || "-",
+      aguaAdicionada: state.printForm.aguaAdicionada || "",
+      aguaRetida: state.printForm.aguaRetida || "",
+      slump: state.printForm.slump || "",
+      slump15: state.printForm.slump15 || "",
+      slumpCorrigido: state.printForm.slumpCorrigido || "",
+      tempConc: state.printForm.tempConc || "",
+      tempAmb: state.printForm.tempAmb || "",
+      umidAmb: state.printForm.umidAmb || "",
+      resistencias: (state.printForm.resistencias||[]).map((r,idx)=>({
+        idade: r.idade || `${RUPTURA_DIAS[idx]} dias`,
+        data: rupturas[idx] || "",
+        comp: r.comp || "",
+        aashto: r.aashto || "",
+        tracao: r.tracao || "",
+        evol: r.evol || ""
+      })),
+      calendarioMes: monthLabel(baseDate)
+    };
+  }
+  function salvarEnsaio(){
+    if(!confirm("Deseja salvar os dados de ensaio desta impressão?")) return;
+    const snap = buildEnsaioSnapshot();
+    if(!snap) return;
+    state.ensaiosSalvos.unshift(snap);
+    saveState();
+    alert("Ensaio salvo.");
+  }
+  salvarEnsaioBtn.addEventListener("click", salvarEnsaio);
+
+  function renderTopSelection(){ const c=getSelectedCliente(); const i=getSelectedInsumo(); uiClienteSel.textContent=c?c.empresa:"Nenhum"; uiInsumoSel.textContent=i?i.insumo:"Nenhum"; }
+  function getSelectedCliente(){ return state.clientes.find(c => c.id === state.selectedClienteId) || null; }
+  function getSelectedInsumo(){ const c=getSelectedCliente(); if(!c) return null; return (c.insumos||[]).find(i=>i.id===state.selectedInsumoId)||null; }
+
+  function renderClientes(){
+    clientesTbody.innerHTML=""; clientesEmpty.hidden=state.clientes.length!==0;
+    state.clientes.forEach(c=>{
+      const tr=document.createElement("tr"); tr.style.cursor="pointer";
+      if(c.id===state.selectedClienteId){ tr.style.outline="2px solid rgba(0,0,0,.2)"; tr.style.outlineOffset="-2px"; }
+      tr.innerHTML=`
+        <td><strong>${escapeHtml(c.empresa)}</strong><br/><span style="color:#555; font-size:11px;">${escapeHtml(c.endereco)}</span></td>
+        <td>${escapeHtml(c.segmento)}</td>
+        <td>${escapeHtml(c.telefone)}<br/><span style="color:#555; font-size:11px;">${escapeHtml(c.email)}</span></td>
+      `;
+      tr.addEventListener("click", ()=>{ state.selectedClienteId=c.id; state.selectedInsumoId=null; saveState(); renderAll(); });
+      clientesTbody.appendChild(tr);
+    });
+    const csel=getSelectedCliente();
+    removerClienteBtn.disabled=!csel;
+    irParaInsumosBtn.disabled=!csel;
+  }
+  function renderInsumos(){
+    const c=getSelectedCliente(); const insumos=c?.insumos || [];
+    insumosClienteNome.textContent=c?c.empresa:"Nenhum";
+    salvarInsumoBtn.disabled=!c; limparInsumoBtn.disabled=!c;
+    insumosTbody.innerHTML=""; insumosEmpty.hidden=insumos.length!==0;
+    for(const ins of insumos){
+      const tr=document.createElement("tr"); tr.style.cursor="pointer";
+      if(ins.id===state.selectedInsumoId){ tr.style.outline="2px solid rgba(0,0,0,.2)"; tr.style.outlineOffset="-2px"; }
+      const me=ins.caracteristicas?.massaEspecifica ?? "";
+      const mf=ins.caracteristicas?.mf ?? "";
+      tr.innerHTML=`
+        <td><strong>${escapeHtml(ins.insumo)}</strong><br/><span style="color:#555; font-size:11px;">${escapeHtml(ins.tipo)} • ${escapeHtml(ins.fornecedor)}</span></td>
+        <td class="nowrap">${formatMassaEspecificaDisplay(me)}</td>
+        <td class="nowrap">${formatMFDisplay(mf)}</td>
+        <td>
+          <div class="row" style="margin-top:0;">
+            <button type="button" class="warn" data-action="car">Carac.</button>
+            <button type="button" class="danger" data-action="remover">Remover</button>
+          </div>
+        </td>
+      `;
+      tr.addEventListener("click",(e)=>{ if(e.target.tagName.toLowerCase()==="button") return; state.selectedInsumoId=ins.id; saveState(); renderAll(); });
+      tr.querySelectorAll("button[data-action]").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          state.selectedInsumoId=ins.id; saveState(); renderAll();
+          const action=btn.getAttribute("data-action");
+          if(action==="remover") removerInsumo(ins.id);
+          if(action==="car") openCaracteristicasModal();
+        });
+      });
+      insumosTbody.appendChild(tr);
+    }
+    irParaCaracteristicasBtn.disabled=!getSelectedInsumo();
+  }
+  function removerInsumo(insumoId){
+    const c=getSelectedCliente(); if(!c) return;
+    const ok=confirm("Remover este insumo?"); if(!ok) return;
+    c.insumos=(c.insumos||[]).filter(x=>x.id!==insumoId);
+    if(state.selectedInsumoId===insumoId) state.selectedInsumoId=null;
+    saveState();
+    renderAll();
+  }
+  function renderCaracteristicasPanel(){
+    const c=getSelectedCliente(); const i=getSelectedInsumo();
+    carClienteNome.textContent=c?c.empresa:"Nenhum";
+    carInsumoNome.textContent=i?i.insumo:"Nenhum";
+    abrirModalCarBtn.disabled=!(c&&i);
+  }
+
+  $("#limparClienteBtn").addEventListener("click", ()=>clienteForm.reset());
+  $("#desselecionarClienteBtn").addEventListener("click", ()=>{ state.selectedClienteId=null; state.selectedInsumoId=null; saveState(); renderAll(); });
+  $("#removerClienteBtn").addEventListener("click", ()=>{
+    const c=getSelectedCliente(); if(!c) return;
+    const ok=confirm(`Remover o cliente "${c.empresa}" e todos os insumos?`); if(!ok) return;
+    state.clientes=state.clientes.filter(x=>x.id!==c.id);
+    state.selectedClienteId=state.clientes[0]?.id ?? null;
+    state.selectedInsumoId=null;
+    saveState();
+    renderAll();
+  });
+  $("#limparTudoBtn").addEventListener("click", ()=>{
+    const ok=confirm("Apagar TODOS os dados salvos?"); if(!ok) return;
+    localStorage.removeItem(STORAGE_KEY);
+    state=loadState();
+    setActiveTab("clientes");
+    renderAll();
+  });
+
+  $("#irParaInsumosBtn").addEventListener("click", ()=>setActiveTab("insumos"));
+  $("#irParaCaracteristicasBtn").addEventListener("click", ()=>setActiveTab("caracteristicas"));
+
+  clienteForm.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const empresa=$("#empresa").value.trim();
+    const endereco=$("#endereco").value.trim();
+    const telefone=$("#telefone").value.trim();
+    const email=$("#email").value.trim();
+    const segmento=$("#segmento").value;
+    if(!empresa||!endereco||!telefone||!email||!segmento) return;
+    const novo={id:uid(), empresa, endereco, telefone, email, segmento, insumos:[]};
+    state.clientes.unshift(novo);
+    state.selectedClienteId=novo.id;
+    state.selectedInsumoId=null;
+    saveState();
+    clienteForm.reset();
+    renderAll();
+  });
+
+  insumoForm.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const c=getSelectedCliente(); if(!c) return;
+    const insumo=$("#insumo").value.trim();
+    const tipo=$("#tipo").value.trim();
+    const fornecedor=$("#fornecedor").value.trim();
+    if(!insumo||!tipo||!fornecedor) return;
+    c.insumos=Array.isArray(c.insumos)?c.insumos:[];
+    const novo={id:uid(), insumo, tipo, fornecedor, caracteristicas:null};
+    c.insumos.unshift(novo);
+    state.selectedInsumoId=novo.id;
+    saveState();
+    insumoForm.reset();
+    renderAll();
+  });
+
+  $("#limparInsumoBtn").addEventListener("click", ()=>insumoForm.reset());
+
+  $("#abrirModalCarBtn").addEventListener("click", openCaracteristicasModal);
+  carModalCloseBtn.addEventListener("click", closeCaracteristicasModal);
+  carModalBackdrop.addEventListener("click",(e)=>{ if(e.target===carModalBackdrop) closeCaracteristicasModal(); });
+  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && carModalBackdrop.style.display==="flex") closeCaracteristicasModal(); });
+
+  resetGranBtn.addEventListener("click", ()=>{
+    const ok=confirm("Zerar todas as massas retidas (incluindo FUNDO)?"); if(!ok) return;
+    modalGranMasses={}; for(const mm of SIEVES_MM) modalGranMasses[String(mm)]=""; modalGranMasses["fundo"]="";
+    renderGranTableInitial();
+  });
+
+  salvarCaracteristicasBtn.addEventListener("click", ()=>{
+    const c=getSelectedCliente(); const ins=getSelectedInsumo(); if(!(c&&ins)) return;
+    const active=document.activeElement;
+    if(active && active.classList?.contains("gran-massa")) commitValueFromInput(active);
+    const massaEspecifica=numOr0(massaEspecificaInput.value);
+    if(!(massaEspecifica>0)){ alert("Informe a massa específica (> 0)."); massaEspecificaInput.focus(); return; }
+    const computed=computeGranulometry(modalGranMasses);
+    if(!(computed.total>0)){ alert("Informe ao menos uma massa retida (> 0)."); return; }
+    ins.caracteristicas={
+      massaEspecifica: round(massaEspecifica,3),
+      mf: round(computed.mf,2),
+      granulometria:{
+        masses:{ ...Object.fromEntries(SIEVES_MM.map(mm=>[String(mm), round(numOr0(modalGranMasses[String(mm)]),2)])), fundo: round(numOr0(modalGranMasses["fundo"]),2) },
+        total: round(computed.total,2),
+        rows: computed.rows.map(r=>({mm:r.mm, massa: round(r.massa,2), perc: round(r.perc,4), acum: round(r.acum,4), pass: round(r.pass,4)})),
+        fundo:{ massa: round(computed.fundo.massa,2), perc: round(computed.fundo.perc,4), acum: round(computed.fundo.acum,4), pass: round(computed.fundo.pass,4) },
+        mfSieves: MF_SIEVES.slice()
+      }
+    };
+    saveState();
+    renderAll();
+    closeCaracteristicasModal();
+    alert("Características salvas.");
+  });
+
+  saveTraceBtn.addEventListener("click", ()=>{
+    const snap=buildSnapshotForHistory(); if(!snap) return;
+    state.tracosHistorico.unshift(snap);
+    saveState();
+    renderHistorico();
+    alert("Traço salvo no histórico local.");
+  });
+
+  salvarEnsaioBtn.addEventListener("click", salvarEnsaio);
+
+  function renderAll(){
+    renderTopSelection();
+    renderClientes();
+    renderInsumos();
+    renderCaracteristicasPanel();
+    syncTracoUI(true);
+    renderTracosSalvos();
+    renderPrintPanel();
+    renderHistorico();
+    updatePctHints();
+  }
+
+  setActiveTab(state.activeTab || "clientes");
+  renderAll();
+</script>
+</body>
+</html>
