@@ -187,7 +187,7 @@
       input, select, textarea{ border:1px solid #000; }
     }
 
-    /* Login / Cadastro */
+    /* Login */
     .auth-backdrop{
       position:fixed; inset:0; background: rgba(0,0,0,.45);
       display:flex; align-items:center; justify-content:center; padding:14px; z-index:100;
@@ -197,9 +197,6 @@
       padding:16px; box-shadow:0 12px 32px rgba(0,0,0,.25);
     }
     .auth-card h2{ margin:0 0 10px; font-size:16px; font-weight:800; }
-    .auth-tabs{ display:flex; gap:6px; margin-bottom:10px; }
-    .auth-tab{ flex:1; padding:10px; border:1px solid #ccc; border-radius:6px; cursor:pointer; background:#f7f7f7; text-align:center; font-weight:700; }
-    .auth-tab[aria-selected="true"]{ background:#000; color:#fff; border-color:#000; }
     .auth-msg{ margin:8px 0; font-size:12px; color:#b00020; }
     .auth-success{ color:#0b874b; }
     .auth-footer{ margin-top:12px; font-size:11px; color:#555; text-align:center; }
@@ -227,6 +224,7 @@
     <div class="pill">Insumo: <strong id="uiInsumoSel">Nenhum</strong></div>
     <div class="topbar-user">
       <span class="badge" id="loggedUserBadge">—</span>
+      <button type="button" class="secondary" id="adminUsersBtn" hidden>Admin: Usuários</button>
       <button type="button" class="secondary" id="logoutBtn">Sair</button>
     </div>
   </section>
@@ -455,7 +453,7 @@
       <div class="empty" id="tracosSalvosEmpty">Nenhum traço salvo.</div>
     </div>
 
-    <!-- Impressão (agora dentro da aba de Traço) -->
+    <!-- Impressão -->
     <div class="card print-sheet" style="margin-top:14px;">
       <div class="print-header">
         <div>
@@ -721,14 +719,10 @@
   </div>
 </div>
 
-<!-- Modal de login/cadastro -->
+<!-- Modal de login (somente entrar) -->
 <div class="auth-backdrop" id="authBackdrop">
   <div class="auth-card" role="dialog" aria-modal="true">
     <h2 id="authTitle">Acesso</h2>
-    <div class="auth-tabs" role="tablist">
-      <button class="auth-tab" id="tabLogin" aria-selected="true" type="button">Entrar</button>
-      <button class="auth-tab" id="tabRegister" aria-selected="false" type="button">Cadastrar</button>
-    </div>
 
     <div id="authLoginPanel">
       <label for="loginUser">Usuário</label>
@@ -739,28 +733,91 @@
       <div class="row" style="margin-top:10px;">
         <button type="button" class="success" id="loginSubmitBtn">Entrar</button>
       </div>
-    </div>
-
-    <div id="authRegisterPanel" hidden>
-      <label for="regUser">Usuário</label>
-      <input id="regUser" autocomplete="username" />
-      <label for="regPass">Senha</label>
-      <input id="regPass" type="password" autocomplete="new-password" />
-      <label for="regPass2">Confirmar senha</label>
-      <input id="regPass2" type="password" autocomplete="new-password" />
-      <div class="auth-msg" id="regMsg" aria-live="polite"></div>
-      <div class="row" style="margin-top:10px;">
-        <button type="button" class="success" id="regSubmitBtn">Cadastrar</button>
+      <div class="auth-footer">
+        Somente o administrador cadastra usuários. Para configurar o sistema, entre como <strong>admin</strong> (primeiro acesso define a senha).
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="auth-footer">Dados de login ficam apenas neste navegador (localStorage).</div>
+<!-- Modal Admin: gerenciamento de usuários -->
+<div class="modal-backdrop" id="adminUsersBackdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">Admin — Usuários</h3>
+        <p class="modal-sub">Cadastrar/remover usuários e trocar senha do admin (armazenado no navegador).</p>
+      </div>
+      <button class="secondary modal-close" type="button" id="adminUsersCloseBtn">Fechar</button>
+    </div>
+
+    <div class="card" style="box-shadow:none;">
+      <h3>Cadastrar novo usuário (requer senha do admin)</h3>
+      <div class="grid">
+        <div>
+          <label for="newUser">Novo usuário</label>
+          <input id="newUser" autocomplete="off" />
+        </div>
+        <div>
+          <label for="newUserPass">Senha do novo usuário</label>
+          <input id="newUserPass" type="password" autocomplete="new-password" />
+        </div>
+        <div>
+          <label for="newUserPass2">Confirmar senha do novo usuário</label>
+          <input id="newUserPass2" type="password" autocomplete="new-password" />
+        </div>
+        <div>
+          <label for="adminConfirmPass">Senha do ADMIN (confirmação)</label>
+          <input id="adminConfirmPass" type="password" autocomplete="current-password" />
+        </div>
+      </div>
+      <div class="auth-msg" id="adminUsersMsg" aria-live="polite"></div>
+      <div class="row">
+        <button type="button" class="success" id="createUserBtn">Criar usuário</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3>Usuários cadastrados</h3>
+      <table aria-label="Tabela de usuários">
+        <thead>
+          <tr><th>Usuário</th><th>Ações</th></tr>
+        </thead>
+        <tbody id="usersTbody"></tbody>
+      </table>
+      <p class="hint">O usuário <strong>admin</strong> não pode ser removido.</p>
+
+      <div class="divider"></div>
+
+      <h3>Trocar senha do admin</h3>
+      <div class="grid">
+        <div>
+          <label for="adminOldPass">Senha atual do admin</label>
+          <input id="adminOldPass" type="password" autocomplete="current-password" />
+        </div>
+        <div>
+          <label for="adminNewPass">Nova senha do admin</label>
+          <input id="adminNewPass" type="password" autocomplete="new-password" />
+        </div>
+        <div>
+          <label for="adminNewPass2">Confirmar nova senha do admin</label>
+          <input id="adminNewPass2" type="password" autocomplete="new-password" />
+        </div>
+        <div></div>
+      </div>
+      <div class="auth-msg" id="adminPassMsg" aria-live="polite"></div>
+      <div class="row">
+        <button type="button" class="warn" id="changeAdminPassBtn">Trocar senha do admin</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-  /* =========  AUTENTICAÇÃO LOCAL (LOGIN/SENHA)  ========= */
+  /* =========  AUTENTICAÇÃO LOCAL (ADMIN CRIA USUÁRIOS)  ========= */
   const AUTH_KEY = "estudo_dosagem_auth_v1";
+  const ADMIN_USERNAME = "admin";
+
   function loadAuth(){
     try { const raw = localStorage.getItem(AUTH_KEY); return raw ? JSON.parse(raw) : { users: [], currentUser: null }; }
     catch { return { users: [], currentUser: null }; }
@@ -773,56 +830,177 @@
     const buf = await crypto.subtle.digest("SHA-256", enc);
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
   }
+
   function findUser(username){
-    return (auth.users||[]).find(u => u.username.toLowerCase() === username.toLowerCase());
+    return (auth.users||[]).find(u => u.username.toLowerCase() === String(username||"").toLowerCase());
   }
-  async function registerUser(username, password){
-    if(!username || !password) throw new Error("Usuário e senha são obrigatórios.");
-    if(password.length < 4) throw new Error("Senha deve ter ao menos 4 caracteres.");
-    if(findUser(username)) throw new Error("Usuário já existe.");
+  function isAdmin(username){
+    return String(username || "").toLowerCase() === ADMIN_USERNAME.toLowerCase();
+  }
+  function hasAdmin(){
+    return !!findUser(ADMIN_USERNAME);
+  }
+
+  async function ensureAdminOnFirstLogin(username, password){
+    if(!isAdmin(username)) return false;
+    if(hasAdmin()) return false;
+
+    if(!password || password.length < 4) {
+      throw new Error("Primeiro acesso: defina uma senha do admin com ao menos 4 caracteres.");
+    }
     const hash = await sha256(password);
-    auth.users.push({ username, hash });
+    auth.users = Array.isArray(auth.users) ? auth.users : [];
+    auth.users.push({ username: ADMIN_USERNAME, hash });
+    auth.currentUser = ADMIN_USERNAME;
     saveAuth();
+    return true;
   }
+
   async function loginUser(username, password){
     if(!username || !password) throw new Error("Informe usuário e senha.");
+
+    const created = await ensureAdminOnFirstLogin(username, password);
+    if(created) return;
+
     const u = findUser(username);
     if(!u) throw new Error("Usuário não encontrado.");
     const hash = await sha256(password);
     if(hash !== u.hash) throw new Error("Senha incorreta.");
+
     auth.currentUser = u.username;
     saveAuth();
   }
+
   function logoutUser(){
     auth.currentUser = null;
     saveAuth();
   }
 
-  /* =========  UI DE LOGIN  ========= */
+  async function confirmAdminPassword(adminPassword){
+    const admin = findUser(ADMIN_USERNAME);
+    if(!admin) throw new Error('Admin não configurado. Faça login como "admin" para definir a senha.');
+    const hash = await sha256(adminPassword || "");
+    if(hash !== admin.hash) throw new Error("Senha do admin inválida.");
+    return true;
+  }
+
+  async function adminCreateUser(newUsername, newPassword){
+    if(!newUsername) throw new Error("Informe o nome do usuário.");
+    if(isAdmin(newUsername)) throw new Error('Use o login "admin" apenas para administração.');
+    if(!newPassword || newPassword.length < 4) throw new Error("Senha deve ter ao menos 4 caracteres.");
+    if(findUser(newUsername)) throw new Error("Usuário já existe.");
+
+    const hash = await sha256(newPassword);
+    auth.users.push({ username: newUsername, hash });
+    saveAuth();
+  }
+
+  function adminDeleteUser(username){
+    if(isAdmin(username)) throw new Error("Não é permitido remover o admin.");
+
+    const uname = String(username || "");
+    auth.users = (auth.users||[]).filter(u => u.username.toLowerCase() !== uname.toLowerCase());
+    saveAuth();
+
+    // Se removeu o usuário logado neste navegador, força logout imediato
+    if(auth.currentUser && auth.currentUser.toLowerCase() === uname.toLowerCase()){
+      logoutUser();
+      hideApp();
+      alert("Seu usuário foi removido. Você saiu do sistema.");
+    }
+  }
+
+  async function adminChangePassword(oldPass, newPass){
+    const admin = findUser(ADMIN_USERNAME);
+    if(!admin) throw new Error('Admin não configurado. Faça login como "admin".');
+
+    await confirmAdminPassword(oldPass);
+
+    if(!newPass || newPass.length < 4) throw new Error("Nova senha deve ter ao menos 4 caracteres.");
+    admin.hash = await sha256(newPass);
+    saveAuth();
+  }
+
+  /* =========  UI (LOGIN + MODAL ADMIN)  ========= */
   const authBackdrop = document.getElementById("authBackdrop");
   const appMain = document.getElementById("appMain");
   const loggedUserBadge = document.getElementById("loggedUserBadge");
   const logoutBtn = document.getElementById("logoutBtn");
-
-  const tabLoginBtn = document.getElementById("tabLogin");
-  const tabRegisterBtn = document.getElementById("tabRegister");
-  const authLoginPanel = document.getElementById("authLoginPanel");
-  const authRegisterPanel = document.getElementById("authRegisterPanel");
   const loginMsg = document.getElementById("loginMsg");
-  const regMsg = document.getElementById("regMsg");
+  const adminUsersBtn = document.getElementById("adminUsersBtn");
 
-  function switchAuthTab(mode){
-    const isLogin = mode === "login";
-    tabLoginBtn.setAttribute("aria-selected", isLogin ? "true" : "false");
-    tabRegisterBtn.setAttribute("aria-selected", isLogin ? "false" : "true");
-    authLoginPanel.hidden = !isLogin;
-    authRegisterPanel.hidden = isLogin;
-    loginMsg.textContent = "";
-    regMsg.textContent = "";
+  const adminUsersBackdrop = document.getElementById("adminUsersBackdrop");
+  const adminUsersCloseBtn = document.getElementById("adminUsersCloseBtn");
+  const adminUsersMsg = document.getElementById("adminUsersMsg");
+  const adminPassMsg = document.getElementById("adminPassMsg");
+  const usersTbody = document.getElementById("usersTbody");
+
+  function showApp(){
+    authBackdrop.style.display = "none";
+    appMain.style.display = "grid";
+    loggedUserBadge.textContent = auth.currentUser || "—";
+    adminUsersBtn.hidden = !isAdmin(auth.currentUser);
+  }
+  function hideApp(){
+    authBackdrop.style.display = "flex";
+    appMain.style.display = "none";
+    loggedUserBadge.textContent = "—";
+    adminUsersBtn.hidden = true;
   }
 
-  tabLoginBtn.addEventListener("click", ()=>switchAuthTab("login"));
-  tabRegisterBtn.addEventListener("click", ()=>switchAuthTab("register"));
+  function openAdminUsers(){
+    if(!isAdmin(auth.currentUser)){
+      alert("Apenas o admin pode acessar esta área.");
+      return;
+    }
+    adminUsersMsg.textContent = "";
+    adminUsersMsg.classList.remove("auth-success");
+    adminPassMsg.textContent = "";
+    adminPassMsg.classList.remove("auth-success");
+    renderUsersTable();
+    adminUsersBackdrop.style.display = "flex";
+  }
+  function closeAdminUsers(){
+    adminUsersBackdrop.style.display = "none";
+  }
+
+  function renderUsersTable(){
+    usersTbody.innerHTML = "";
+    const users = Array.isArray(auth.users) ? auth.users : [];
+
+    if(!users.length){
+      const tr=document.createElement("tr");
+      tr.innerHTML = `<td colspan="2">Nenhum usuário cadastrado.</td>`;
+      usersTbody.appendChild(tr);
+      return;
+    }
+
+    users
+      .slice()
+      .sort((a,b)=>a.username.localeCompare(b.username, "pt-BR", { sensitivity:"base" }))
+      .forEach(u=>{
+        const tr=document.createElement("tr");
+        const canDelete = !isAdmin(u.username);
+        tr.innerHTML = `
+          <td>${u.username}</td>
+          <td class="nowrap">
+            <button type="button" class="danger" ${canDelete ? "" : "disabled"} data-user="${u.username}">Remover</button>
+          </td>
+        `;
+        tr.querySelector("button")?.addEventListener("click", ()=>{
+          const username = u.username;
+          if(!canDelete) return;
+          if(!confirm(`Remover o usuário "${username}"?`)) return;
+          try{
+            adminDeleteUser(username);
+            renderUsersTable();
+          }catch(err){
+            alert(err.message || "Erro ao remover usuário.");
+          }
+        });
+        usersTbody.appendChild(tr);
+      });
+  }
 
   document.getElementById("loginSubmitBtn").addEventListener("click", async ()=>{
     loginMsg.textContent = "";
@@ -837,38 +1015,68 @@
     }
   });
 
-  document.getElementById("regSubmitBtn").addEventListener("click", async ()=>{
-    regMsg.textContent = "";
-    const user = document.getElementById("regUser").value.trim();
-    const pass = document.getElementById("regPass").value;
-    const pass2= document.getElementById("regPass2").value;
-    try{
-      if(pass !== pass2) throw new Error("As senhas não coincidem.");
-      await registerUser(user, pass);
-      regMsg.textContent = "Usuário cadastrado. Faça login.";
-      regMsg.classList.add("auth-success");
-      switchAuthTab("login");
-    }catch(err){
-      regMsg.textContent = err.message || "Erro ao cadastrar.";
-      regMsg.classList.remove("auth-success");
-    }
-  });
-
   logoutBtn.addEventListener("click", ()=>{
     logoutUser();
     hideApp();
   });
 
-  function showApp(){
-    authBackdrop.style.display = "none";
-    appMain.style.display = "grid";
-    loggedUserBadge.textContent = auth.currentUser || "—";
-  }
-  function hideApp(){
-    authBackdrop.style.display = "flex";
-    appMain.style.display = "none";
-    loggedUserBadge.textContent = "—";
-  }
+  adminUsersBtn?.addEventListener("click", openAdminUsers);
+  adminUsersCloseBtn?.addEventListener("click", closeAdminUsers);
+  adminUsersBackdrop?.addEventListener("click", (e)=>{ if(e.target===adminUsersBackdrop) closeAdminUsers(); });
+  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && adminUsersBackdrop?.style.display==="flex") closeAdminUsers(); });
+
+  document.getElementById("createUserBtn")?.addEventListener("click", async ()=>{
+    adminUsersMsg.textContent = "";
+    adminUsersMsg.classList.remove("auth-success");
+
+    const newUser = document.getElementById("newUser").value.trim();
+    const pass1 = document.getElementById("newUserPass").value;
+    const pass2 = document.getElementById("newUserPass2").value;
+    const adminPass = document.getElementById("adminConfirmPass").value;
+
+    try{
+      if(pass1 !== pass2) throw new Error("As senhas do novo usuário não coincidem.");
+      await confirmAdminPassword(adminPass);
+      await adminCreateUser(newUser, pass1);
+
+      adminUsersMsg.textContent = "Usuário criado com sucesso.";
+      adminUsersMsg.classList.add("auth-success");
+
+      document.getElementById("newUser").value = "";
+      document.getElementById("newUserPass").value = "";
+      document.getElementById("newUserPass2").value = "";
+      document.getElementById("adminConfirmPass").value = "";
+
+      renderUsersTable();
+    }catch(err){
+      adminUsersMsg.textContent = err.message || "Erro ao criar usuário.";
+      adminUsersMsg.classList.remove("auth-success");
+    }
+  });
+
+  document.getElementById("changeAdminPassBtn")?.addEventListener("click", async ()=>{
+    adminPassMsg.textContent = "";
+    adminPassMsg.classList.remove("auth-success");
+
+    const oldPass = document.getElementById("adminOldPass").value;
+    const newPass = document.getElementById("adminNewPass").value;
+    const newPass2= document.getElementById("adminNewPass2").value;
+
+    try{
+      if(newPass !== newPass2) throw new Error("A confirmação da nova senha do admin não confere.");
+      await adminChangePassword(oldPass, newPass);
+
+      adminPassMsg.textContent = "Senha do admin alterada com sucesso.";
+      adminPassMsg.classList.add("auth-success");
+
+      document.getElementById("adminOldPass").value = "";
+      document.getElementById("adminNewPass").value = "";
+      document.getElementById("adminNewPass2").value = "";
+    }catch(err){
+      adminPassMsg.textContent = err.message || "Erro ao trocar senha do admin.";
+      adminPassMsg.classList.remove("auth-success");
+    }
+  });
 
   if(auth.currentUser){
     showApp();
@@ -1434,8 +1642,6 @@
 
     const last=state.lastTraco;
     const volume=getEffectiveVolume();
-    document.getElementById("printClienteNome")?.setAttribute("value", last?.clienteNome || "(sem cliente)");
-    if(document.getElementById("printClienteNome")) document.getElementById("printClienteNome").value = last?.clienteNome || "(sem cliente)";
 
     const tbodyMat=printMateriaisInfo.querySelector("tbody");
     if(tbodyMat){
@@ -1551,12 +1757,6 @@
     setTimeout(()=>window.print(),150);
   });
 
-  function editableCell(td, onSave){
-    td.contentEditable="true";
-    td.addEventListener("blur", ()=>onSave(td.textContent || ""));
-    td.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); td.blur(); }});
-  }
-
   function buildSnapshotForHistory(){
     const last=state.lastTraco;
     if(!last){ alert("Calcule o traço antes de salvar."); return null; }
@@ -1629,7 +1829,7 @@
 
   function toggleRowEditing(tr, editing){
     const tds = Array.from(tr.querySelectorAll("td"));
-    const actionCell = tds.pop();
+    tds.pop();
     tds.forEach(td=>{
       td.contentEditable = editing ? "true" : "false";
       td.classList.toggle("editing-cell", editing);
@@ -2197,8 +2397,6 @@
     renderHistorico();
     alert("Traço salvo no histórico local.");
   });
-
-  salvarEnsaioBtn.addEventListener("click", salvarEnsaio);
 
   function renderAll(){
     renderTopSelection();
