@@ -280,6 +280,97 @@
 
       .row{ margin-top: 4px; gap: 4px; }
     }
+
+    /* ====== LOGIN (AUTH) — Improved styles only ====== */
+    .auth-backdrop{
+      position: fixed;
+      inset: 0;
+      display: none; /* JS controls show/hide */
+      align-items: center;
+      justify-content: center;
+      background: rgba(8,32,64,0.45);
+      z-index: 80;
+      padding: 20px;
+      transition: opacity .18s ease;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .auth-card{
+      width: min(460px, 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+      border: 1px solid rgba(138,166,199,0.9);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(6,25,60,0.35), inset 0 1px 0 rgba(255,255,255,0.7);
+      max-height: 92vh;
+      overflow: auto;
+      display: block;
+    }
+
+    .auth-card h2#authTitle{
+      margin: 0 0 8px;
+      font-size: 20px;
+      color: var(--accent);
+      letter-spacing: 0.4px;
+    }
+
+    /* login panel layout */
+    #authLoginPanel {
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #authLoginPanel label{
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    #loginUser, #loginPass {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #cde2f6;
+      background: linear-gradient(180deg,#fff,#f6fbff);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+      font-size: 14px;
+    }
+
+    .auth-msg {
+      margin-top: 6px;
+      min-height: 18px;
+      font-size: 13px;
+      color: var(--danger);
+    }
+
+    .auth-footer{
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.25;
+      border-top: 1px dashed rgba(138,166,199,0.15);
+      padding-top: 10px;
+    }
+
+    #loginSubmitBtn{
+      margin-top: 8px;
+      padding: 10px 12px;
+      font-size: 15px;
+      border-radius: 8px;
+      width: 100%;
+      box-shadow: 0 6px 16px rgba(10,110,209,0.18), inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    /* small screens */
+    @media (max-width: 480px){
+      .auth-card{ padding: 16px; border-radius: 10px; }
+      #loginUser, #loginPass { font-size: 15px; padding: 12px; }
+      #loginSubmitBtn{ font-size: 15px; padding: 12px; }
+      .auth-footer{ font-size: 12px; }
+    }
+    /* end login styles */
   </style>
 </head>
 <body>
@@ -2194,6 +2285,102 @@
     }
   });
 
+  /* =========  PRINT / DOSAGEM: umidade e correções automáticas ========= */
+
+  // Updates corrected dosages and water correction based on "umidade" inputs in the print dosagem table.
+  function updateUmidadeCorrections(){
+    const last = state.lastTraco;
+    if(!last || !last.traco1m3) return;
+
+    // Determine the volume used for dosages (volume lab or volume M3)
+    const volume = Math.max(0, numOr0(state.printForm.volumeLab) || numOr0(state.printForm.volumeM3) || last?.volume || 1);
+
+    // Initial mixing water for the chosen volume (taken from last.traco1m3['agua'])
+    const initialWater = (Number(last.traco1m3?.agua ?? 0)) * volume;
+
+    // Read additional water input (user can type), if present in DOM
+    const aguaAdicionadaEl = document.querySelector('[data-print-key="aguaAdicionada"]');
+    const aguaAdicionada = aguaAdicionadaEl ? numOr0(aguaAdicionadaEl.value) : 0;
+
+    let totalMoistureMass = 0; // total water mass contributed by materials' moisture (kg)
+
+    // Iterate table rows and calculate corrected dosages
+    const rows = Array.from(printDosagemTbody.querySelectorAll("tr"));
+    rows.forEach(tr => {
+      const umInput = tr.querySelector('input[data-field="umidade"]');
+      const key = umInput?.getAttribute("data-row") || "";
+      const origDos = Number(tr.dataset.origDosagem ?? 0); // original dry dosagem (kg)
+      const uPct = numOr0(umInput?.value || 0); // percent
+
+      // moisture mass contributed by this material (kg) = origDos * (uPct / 100)
+      const moistureMass = (origDos * (uPct / 100));
+      // corrected (wet) mass to be weighed from stock: typically wet_mass = orig_dry * (1 + u)
+      const correctedWet = origDos * (1 + (uPct / 100));
+
+      // update corrected column (5th column in our table)
+      const corrCell = tr.querySelector('[data-col="corrigido"]');
+      if(corrCell){
+        corrCell.textContent = fmtPt(correctedWet,1);
+      }else{
+        // fallback: update last td
+        const tds = tr.querySelectorAll("td");
+        if(tds.length) tds[tds.length-1].textContent = fmtPt(correctedWet,1);
+      }
+
+      // Sum moisture mass from all materials except 'agua' (water moisture is not meaningful)
+      if(key !== "agua"){
+        totalMoistureMass += moistureMass;
+      }
+    });
+
+    // Compute corrected water to be added to the mix:
+    // finalWater = initialWater - totalMoistureMass + aguaAdicionada
+    const finalWater = Math.max(0, initialWater - totalMoistureMass + aguaAdicionada);
+
+    // Update the fields in the print panel
+    const printAguaInicialEl = document.getElementById("printAguaInicial");
+    const printAguaFinalEl = document.getElementById("printAguaFinal");
+    const aguaCorrecaoEl = document.querySelector('[data-print-key="aguaCorrecao"]');
+
+    if(printAguaInicialEl) printAguaInicialEl.value = fmtPt(initialWater,1);
+    if(printAguaFinalEl) printAguaFinalEl.value = fmtPt(finalWater,1);
+    if(aguaCorrecaoEl) aguaCorrecaoEl.value = fmtPt(-totalMoistureMass,1); // negative -> reduce water by this amount
+
+    // Also update the 'Água' row corrected cell in the dosagem table (if present)
+    const aguaRow = printDosagemTbody.querySelector('input[data-row="agua"]')?.closest("tr");
+    if(aguaRow){
+      const corrCell = aguaRow.querySelector('[data-col="corrigido"]') || aguaRow.querySelectorAll("td")[4];
+      if(corrCell) corrCell.textContent = fmtPt(finalWater / (Math.max(1, volume)),1); // set per m3? original was 1m3; to be consistent, show per m3
+      // Note: the table's header is "Traço corrigido 1 m³", so better show per m³:
+      if(corrCell) corrCell.textContent = fmtPt(finalWater / Math.max(1, volume) ,1);
+      // Also update the original "dosagem 1m³" cell if needed? We keep original as dry dosagem.
+    }
+  }
+
+  // Attach listeners to umidade inputs and aguaAdicionada input after rendering the print table.
+  function bindUmidadeInputs(){
+    // Find inputs in the dosagem table
+    const inputs = printDosagemTbody.querySelectorAll('input[data-field="umidade"]');
+    inputs.forEach(inp=>{
+      inp.removeEventListener("input", updateUmidadeCorrections);
+      inp.addEventListener("input", updateUmidadeCorrections);
+      inp.addEventListener("change", updateUmidadeCorrections);
+    });
+
+    // Ensure aguaAdicionada re-triggers correction
+    const aguaAdicionadaEl = document.querySelector('[data-print-key="aguaAdicionada"]');
+    if(aguaAdicionadaEl){
+      aguaAdicionadaEl.removeEventListener("input", updateUmidadeCorrections);
+      aguaAdicionadaEl.addEventListener("input", updateUmidadeCorrections);
+      aguaAdicionadaEl.addEventListener("change", updateUmidadeCorrections);
+    }
+
+    // Run one initial update so fields are consistent immediately
+    updateUmidadeCorrections();
+  }
+
+  // Override renderPrintPanel to include data-original dosagem attributes and corrected cell markers,
+  // then bind umidade inputs so corrections are applied live.
   function renderPrintPanel(){
     if(!state.printForm) state.printForm={};
     if(!state.printForm.data) state.printForm.data=new Date().toISOString().slice(0,10);
@@ -2252,16 +2439,19 @@
 
     printDosagemTbody.innerHTML="";
     if(last && last.materials){
+      // For each material build a row and store original dosagem as data attribute
       last.materials.forEach(mat=>{
         const key=mat.key;
-        const dosagem=(last.traco1m3[key] ?? 0) * volume;
+        const dosagem=(last.traco1m3[key] ?? 0) * volume; // dosagem for the chosen volume
         const tr=document.createElement("tr");
+        // add data-original so we can recompute even after text content changes
+        tr.dataset.origDosagem = String(dosagem);
         tr.innerHTML=`
           <td>${mat.label}</td>
           <td class="right nowrap">${fmtPt(dosagem,1)}</td>
           <td class="center">-</td>
           <td class="center"><input data-row="${key}" data-field="umidade" value="" /></td>
-          <td class="right nowrap">${fmtPt(dosagem,1)}</td>
+          <td class="right nowrap" data-col="corrigido">${fmtPt(dosagem,1)}</td>
         `;
         printDosagemTbody.appendChild(tr);
       });
@@ -2298,6 +2488,9 @@
 
     document.querySelector('[data-print-key="slump15"]').value = state.printForm.slump15 || "";
     document.querySelector('[data-print-key="slumpCorrigido"]').value = state.printForm.slumpCorrigido || "";
+
+    // After building table, bind umidade inputs and compute corrections
+    bindUmidadeInputs();
   }
 
   printPdfBtn.addEventListener("click", ()=>{
